@@ -62,7 +62,10 @@
                 <span class="text-[9px] text-slate-400 font-bold uppercase -mt-0.5 ml-0.5 italic">by GierelAxel.dev</span>
             </div>
             <div class="flex items-center gap-2">
-                <select id="selectCartera" onchange="cambiarCartera(this.value)" class="bg-slate-100 text-[10px] font-black uppercase px-3 py-2 rounded-full outline-none border"></select>
+                <div class="flex items-center bg-slate-100 rounded-full px-2 border">
+                    <select id="selectCartera" onchange="cambiarCartera(this.value)" class="bg-transparent text-[10px] font-black uppercase px-2 py-2 outline-none"></select>
+                    <button onclick="document.getElementById('modalCartera').showModal()" class="text-blue-600 p-1"><i class="ph-bold ph-plus-circle text-xl"></i></button>
+                </div>
                 <button onclick="handleLogout()" class="p-2 text-red-400"><i class="ph-bold ph-power text-xl"></i></button>
             </div>
         </nav>
@@ -70,11 +73,11 @@
         <main id="viewDashboard" class="max-w-5xl mx-auto p-4 md:p-8">
             <div class="grid grid-cols-2 gap-4 mb-8 text-center">
                 <div class="bg-white p-6 rounded-[2rem] border card-shadow">
-                    <p class="text-[9px] font-black uppercase text-slate-400">Capital</p>
+                    <p class="text-[9px] font-black uppercase text-slate-400">Capital Activo</p>
                     <h2 id="totalCapital" class="text-2xl font-black">$0.00</h2>
                 </div>
                 <div class="bg-white p-6 rounded-[2rem] border card-shadow">
-                    <p class="text-[9px] font-black uppercase text-slate-400">Interés</p>
+                    <p class="text-[9px] font-black uppercase text-slate-400">Interés Proyectado</p>
                     <h2 id="totalIntereses" class="text-2xl font-black text-emerald-600">$0.00</h2>
                 </div>
             </div>
@@ -113,6 +116,13 @@
         </div>
     </dialog>
 
+    <dialog id="modalCartera" class="rounded-[2rem] p-8 w-full max-w-xs border-none text-center relative shadow-xl">
+        <button onclick="this.closest('dialog').close()" class="absolute top-6 right-6 text-slate-300"><i class="ph-bold ph-x text-xl"></i></button>
+        <h3 class="font-black uppercase mb-4 italic text-slate-400 text-xs">Nueva Cartera</h3>
+        <input type="text" id="nombreNuevaCartera" placeholder="Nombre de la cartera" class="w-full p-4 bg-slate-50 border rounded-xl mb-4 font-bold text-center outline-none">
+        <button onclick="crearCartera()" class="w-full p-4 bg-blue-600 text-white rounded-xl font-black uppercase">Crear Cartera</button>
+    </dialog>
+
     <dialog id="modalPapelera" class="rounded-[2rem] p-8 w-full max-w-md border-none relative">
         <button onclick="this.closest('dialog').close()" class="absolute top-6 right-6 text-slate-300"><i class="ph-bold ph-x text-xl"></i></button>
         <h3 class="font-black mb-6 uppercase italic text-xl text-center">Papelera</h3>
@@ -127,18 +137,18 @@
             <div class="flex items-center justify-center gap-2"><input type="checkbox" id="checkTodoCapital"><span class="text-[10px] font-black uppercase text-slate-400">100% Capital</span></div>
             <input type="number" id="montoPago" placeholder="0.00" class="w-full p-5 bg-slate-100 rounded-2xl font-black text-3xl text-center outline-none">
         </div>
-        <button onclick="confirmarPago()" class="w-full p-5 bg-slate-900 text-white rounded-2xl font-black uppercase">Confirmar</button>
+        <button onclick="confirmarPago()" class="w-full p-5 bg-slate-900 text-white rounded-2xl font-black uppercase">Confirmar Pago</button>
     </dialog>
 
     <dialog id="modalForm" class="rounded-[2rem] p-8 w-full max-w-sm border-none relative">
         <button onclick="this.closest('dialog').close()" class="absolute top-6 right-6 text-slate-300"><i class="ph-bold ph-x text-xl"></i></button>
-        <h3 id="formTitle" class="font-black mb-6 uppercase text-center">Datos</h3>
+        <h3 id="formTitle" class="font-black mb-6 uppercase text-center">Datos Préstamo</h3>
         <div class="space-y-4">
             <div><label>Cliente</label><input type="text" id="formNombre" class="w-full p-4 bg-slate-50 border rounded-2xl font-bold outline-none"></div>
             <div><label>Monto</label><input type="number" id="formMonto" class="w-full p-4 bg-slate-50 border rounded-2xl font-bold outline-none"></div>
             <div class="grid grid-cols-2 gap-2">
                 <div><label>Interés %</label><select id="formTasa" class="w-full p-4 bg-slate-50 border rounded-2xl font-bold outline-none"><option value="10">10%</option><option value="20" selected>20%</option></select></div>
-                <div><label>Gracia</label><input type="number" id="formGracia" value="0" class="w-full p-4 bg-slate-50 border rounded-2xl font-bold outline-none"></div>
+                <div><label>Días Gracia</label><input type="number" id="formGracia" value="0" class="w-full p-4 bg-slate-50 border rounded-2xl font-bold outline-none"></div>
             </div>
             <button onclick="guardarPrestamo()" class="w-full p-5 bg-emerald-600 text-white rounded-2xl font-black uppercase">Guardar</button>
         </div>
@@ -150,9 +160,9 @@
                 <div class="text-center mb-6"><h2 id="reciboCliente" class="text-xl font-black uppercase italic"></h2></div>
                 <div class="space-y-3 border-y py-4 border-dashed border-slate-200 text-sm">
                     <div class="flex justify-between"><span>FECHA</span><span id="reciboFechaSimple" class="font-bold"></span></div>
-                    <div class="flex justify-between"><span>MONTO</span><span id="reciboMonto" class="font-black text-emerald-600"></span></div>
-                    <div class="flex justify-between"><span>INTERÉS</span><span id="reciboInteres"></span></div>
-                    <div class="flex justify-between"><span>ABONO</span><span id="reciboAbonoCapital" class="font-bold"></span></div>
+                    <div class="flex justify-between"><span>MONTO RECIBIDO</span><span id="reciboMonto" class="font-black text-emerald-600"></span></div>
+                    <div class="flex justify-between"><span>INTERÉS CUBIERTO</span><span id="reciboInteres" class="font-bold"></span></div>
+                    <div class="flex justify-between"><span>ABONO A CAPITAL</span><span id="reciboAbonoCapital" class="font-bold"></span></div>
                 </div>
                 <div class="mt-4 bg-slate-900 p-4 rounded-2xl text-center text-white">
                     <p class="text-[8px] font-black uppercase opacity-50">Saldo Pendiente</p>
@@ -160,7 +170,7 @@
                 </div>
             </div>
         </div>
-        <div class="p-4 bg-white"><button id="btnCompartirWA" class="w-full p-4 bg-[#25D366] text-white rounded-2xl font-black uppercase">Compartir WhatsApp</button></div>
+        <div class="p-4 bg-white"><button id="btnCompartirWA" class="w-full p-4 bg-[#25D366] text-white rounded-2xl font-black uppercase flex items-center justify-center gap-2"><i class="ph-fill ph-whatsapp-logo text-xl"></i> Compartir WhatsApp</button></div>
     </dialog>
 
     <script>
@@ -239,7 +249,7 @@
         }
 
         async function eliminarPago(id) {
-            if(confirm("¿Eliminar?")) {
+            if(confirm("¿Enviar a papelera?")) {
                 const { data: p } = await _supabase.from('pagos').select('*').eq('id', id).single();
                 await _supabase.from('papelera').insert([{ tipo: 'pago', datos: p, user_id: currentUser.id }]);
                 await _supabase.from('pagos').delete().eq('id', id);
@@ -268,11 +278,12 @@
             const obj = { monto_pagado: m, aplicar_interes: a, fecha_pago: f, user_id: currentUser.id };
             if(idPagoAEditar) await _supabase.from('pagos').update(obj).eq('id', idPagoAEditar);
             else await _supabase.from('pagos').insert([{ ...obj, prestamo_id: pActivo.id }]);
-            modalPago.close(); if(pActivo.id) await verHistorial(pActivo.id); else cargarDatos();
-            if(!idPagoAEditar) abrirReciboVisual(m);
+            modalPago.close(); 
+            if(pActivo.id) await verHistorial(pActivo.id); else cargarDatos();
+            if(!idPagoAEditar) abrirReciboVisual(m, a);
         }
 
-        // --- GENERAL ---
+        // --- HISTORIAL ---
         async function verHistorial(id) {
             const { data: p } = await _supabase.from('prestamos').select('*, clientes(*), pagos(*)').eq('id', id).single();
             pActivo = p; const calc = calcularSaldo(p);
@@ -281,7 +292,8 @@
             listaPagosHistorial.innerHTML = p.pagos.sort((a,b)=>new Date(b.fecha_pago)-new Date(a.fecha_pago)).map(pg => `
                 <div class="bg-white p-5 rounded-[2rem] border flex justify-between items-center shadow-sm">
                     <div><p class="text-[9px] font-black text-slate-300 uppercase">${pg.fecha_pago}</p><p class="text-xl font-black">$${parseFloat(pg.monto_pagado).toFixed(2)}</p></div>
-                    <div class="flex gap-2">
+                    <div class="flex gap-1">
+                        <button onclick="abrirReciboHistorial('${pg.id}')" class="text-emerald-500 p-2"><i class="ph-bold ph-whatsapp-logo text-2xl"></i></button>
                         <button onclick="editarPago('${pg.id}', ${pg.monto_pagado}, '${pg.fecha_pago}', ${pg.aplicar_interes})" class="text-blue-400 p-2"><i class="ph-bold ph-pencil-simple text-2xl"></i></button>
                         <button onclick="eliminarPago('${pg.id}')" class="text-red-200 p-2"><i class="ph-bold ph-trash text-2xl"></i></button>
                     </div></div>`).join('');
@@ -289,6 +301,7 @@
 
         function editarPago(id, m, f, a) { idPagoAEditar = id; montoPago.value = m; fechaPago.value = f; checkTodoCapital.checked = !a; modalPago.showModal(); }
 
+        // --- CALCULOS ---
         function calcularSaldo(p) {
             let c = parseFloat(p.monto_prestado), t = p.tasa_interes / 100;
             (p.pagos || []).sort((a,b)=>new Date(a.fecha_pago)-new Date(b.fecha_pago)).forEach(x => {
@@ -299,6 +312,45 @@
         function verificarMora(pgs, g) {
             const h = new Date(), d = h.getDate(), l15 = 15+parseInt(g), l30 = 30+parseInt(g), chk = d > l30 ? 30 : (d > l15 ? 15 : 0);
             if(!chk) return false; return !pgs?.some(x => { const f = new Date(x.fecha_pago); return f.getUTCMonth() === h.getUTCMonth() && f.getUTCDate() >= (chk === 15 ? 1 : 16); });
+        }
+
+        async function abrirReciboHistorial(pagoId) {
+            const pg = pActivo.pagos.find(x => x.id === pagoId);
+            if(pg) abrirReciboVisual(pg.monto_pagado, pg.aplicar_interes, pg.fecha_pago);
+        }
+
+        async function abrirReciboVisual(montoP, aplicaInt, fechaP = null) {
+            const { data: p } = await _supabase.from('prestamos').select('*, clientes(*), pagos(*)').eq('id', pActivo.id).single();
+            const fechaRecibo = fechaP || new Date().toISOString().split('T')[0];
+            
+            // Simular saldo previo al pago seleccionado
+            let capPrevio = parseFloat(p.monto_prestado), tD = p.tasa_interes / 100;
+            const pagosOrdenados = p.pagos.sort((a,b) => new Date(a.fecha_pago) - new Date(b.fecha_pago));
+            
+            // Recorrer pagos previos al pago que estamos visualizando
+            pagosOrdenados.forEach(pg => {
+                if(new Date(pg.fecha_pago) < new Date(fechaRecibo)) {
+                    const ma = parseFloat(pg.monto_pagado);
+                    if (pg.aplicar_interes) { const i = capPrevio * tD; if (ma >= i) capPrevio -= (ma - i); } else capPrevio -= ma;
+                }
+            });
+
+            const interesPagado = aplicaInt ? Math.min(montoP, capPrevio * tD) : 0;
+            const abonoCapital = aplicaInt ? Math.max(0, montoP - (capPrevio * tD)) : montoP;
+            const saldoFinal = Math.max(0, capPrevio - abonoCapital);
+
+            reciboCliente.innerText = p.clientes.nombre; 
+            reciboMonto.innerText = `$${parseFloat(montoP).toFixed(2)}`; 
+            reciboInteres.innerText = `$${interesPagado.toFixed(2)}`; 
+            reciboAbonoCapital.innerText = `$${abonoCapital.toFixed(2)}`;
+            reciboFechaSimple.innerText = fechaRecibo; 
+            reciboSaldo.innerText = `$${saldoFinal.toFixed(2)}`;
+            
+            modalReciboImagen.showModal();
+            btnCompartirWA.onclick = async () => {
+                const canvas = await html2canvas(areaRecibo, { backgroundColor: '#F8FAFC', scale: 2 });
+                canvas.toBlob(async b => { const f = new File([b], 'Recibo.png', {type:'image/png'}); if(navigator.share) await navigator.share({files:[f]}); });
+            };
         }
 
         function abrirModalNuevo() { modoEdicionForm = false; formNombre.value = ''; formMonto.value = ''; modalForm.showModal(); }
@@ -316,18 +368,7 @@
             }
         }
 
-        async function abrirReciboVisual(m) {
-            const { data: p } = await _supabase.from('prestamos').select('*, clientes(*), pagos(*)').eq('id', pActivo.id).single();
-            const calc = calcularSaldo(p); // Este es el saldo ya con el pago aplicado
-            reciboCliente.innerText = p.clientes.nombre; reciboMonto.innerText = `$${m.toFixed(2)}`;
-            reciboFechaSimple.innerText = new Date().toLocaleDateString(); reciboSaldo.innerText = `$${calc.capital.toFixed(2)}`;
-            modalReciboImagen.showModal();
-            btnCompartirWA.onclick = async () => {
-                const canvas = await html2canvas(areaRecibo, { backgroundColor: '#F8FAFC', scale: 2 });
-                canvas.toBlob(async b => { const f = new File([b], 'Recibo.png', {type:'image/png'}); if(navigator.share) await navigator.share({files:[f]}); });
-            };
-        }
-
+        async function crearCartera() { await _supabase.from('carteras').insert([{ nombre: nombreNuevaCartera.value, user_id: currentUser.id }]); modalCartera.close(); cargarCarteras(); }
         function cerrarHistorial() { viewHistorial.classList.add('hidden'); viewDashboard.classList.remove('hidden'); cargarDatos(); }
         function filtrarTab(t) { tabActual = t; cargarDatos(); }
         function cambiarCartera(id) { idCarteraActual = id; cargarDatos(); }
