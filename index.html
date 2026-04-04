@@ -10,12 +10,21 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <style>
-        body { font-family: 'Inter', sans-serif; letter-spacing: -0.01em; -webkit-tap-highlight-color: transparent; }
+        body { font-family: 'Inter', sans-serif; letter-spacing: -0.01em; -webkit-tap-highlight-color: transparent; overflow-x: hidden; }
         .hidden { display: none !important; }
         dialog::backdrop { background: rgba(15, 23, 42, 0.9); backdrop-filter: blur(8px); }
         .card-shadow { box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.04); }
+        
+        /* Animación de transición */
+        .view-transition { animation: fadeInScale 0.3s ease-out; }
+        @keyframes fadeInScale {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
         .badge-mora { animation: pulse 2s infinite; }
         @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
+        
         label { display: block; text-align: left; font-weight: 800; text-transform: uppercase; font-size: 10px; color: #94a3b8; margin-bottom: 4px; margin-left: 8px; }
         .tab-active { border-bottom: 3px solid #10b981; color: #0f172a !important; }
         .select-none { user-select: none; -webkit-user-select: none; }
@@ -30,7 +39,7 @@
     </script>
 
     <div id="authScreen" class="hidden min-h-screen flex items-center justify-center p-6 bg-slate-50">
-        <div class="bg-white p-8 rounded-[2.5rem] border card-shadow w-full max-w-sm text-center">
+        <div class="bg-white p-8 rounded-[2.5rem] border card-shadow w-full max-w-sm text-center view-transition">
             <div class="flex flex-col items-center mb-8">
                 <div class="flex items-center gap-1">
                     <span class="text-2xl font-extrabold text-slate-950 tracking-tighter uppercase">Prest<span class="text-emerald-500">app</span></span>
@@ -38,13 +47,11 @@
                 </div>
                 <p class="text-[10px] font-bold text-slate-400 uppercase mt-2 italic">by GierelAxel.dev</p>
             </div>
-            <div id="view-auth-main">
-                <input type="email" id="authEmail" placeholder="Correo" class="w-full p-4 bg-slate-50 border rounded-2xl font-bold outline-none mb-4 focus:border-emerald-500">
-                <input type="password" id="authPassword" placeholder="Contraseña" class="w-full p-4 bg-slate-50 border rounded-2xl font-bold outline-none mb-4 focus:border-emerald-500">
-                <div class="grid grid-cols-2 gap-2">
-                    <button onclick="handleAuth('login')" class="p-4 bg-slate-900 text-white rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-lg">Entrar</button>
-                    <button onclick="handleAuth('signup')" class="p-4 bg-white border-2 border-slate-900 text-slate-900 rounded-2xl font-black uppercase text-[10px] tracking-widest">Registro</button>
-                </div>
+            <input type="email" id="authEmail" placeholder="Correo electrónico" class="w-full p-4 bg-slate-50 border rounded-2xl font-bold outline-none mb-4 focus:border-emerald-500">
+            <input type="password" id="authPassword" placeholder="Contraseña de acceso" class="w-full p-4 bg-slate-50 border rounded-2xl font-bold outline-none mb-4 focus:border-emerald-500">
+            <div class="grid grid-cols-2 gap-2">
+                <button onclick="handleAuth('login')" class="p-4 bg-slate-900 text-white rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-lg">Entrar</button>
+                <button onclick="handleAuth('signup')" class="p-4 bg-white border-2 border-slate-900 text-slate-900 rounded-2xl font-black uppercase text-[10px] tracking-widest">Registro</button>
             </div>
             <p id="authError" class="text-red-500 text-[10px] font-bold mt-4 uppercase"></p>
         </div>
@@ -64,13 +71,13 @@
             <div class="flex items-center gap-2">
                 <div class="flex items-center bg-slate-100 rounded-full px-2 border">
                     <select id="selectCartera" onchange="cambiarCartera(this.value)" class="bg-transparent text-[10px] font-black uppercase px-2 py-2 outline-none"></select>
-                    <button onclick="document.getElementById('modalCartera').showModal()" class="text-blue-600 p-1"><i class="ph-bold ph-plus-circle text-xl"></i></button>
+                    <button onclick="document.getElementById('modalCartera').showModal()" title="Nueva Cartera" class="text-blue-600 p-1"><i class="ph-bold ph-plus-circle text-xl"></i></button>
                 </div>
                 <button onclick="handleLogout()" class="p-2 text-red-400"><i class="ph-bold ph-power text-xl"></i></button>
             </div>
         </nav>
 
-        <main id="viewDashboard" class="max-w-5xl mx-auto p-4 md:p-8">
+        <main id="viewDashboard" class="max-w-5xl mx-auto p-4 md:p-8 view-transition">
             <div class="grid grid-cols-2 gap-4 mb-8 text-center">
                 <div class="bg-white p-6 rounded-[2rem] border card-shadow">
                     <p class="text-[9px] font-black uppercase text-slate-400">Capital Activo</p>
@@ -88,16 +95,18 @@
             <div class="bg-white rounded-[2rem] border overflow-hidden card-shadow">
                 <table class="w-full text-left"><tbody id="listaPrestamos"></tbody></table>
             </div>
-            <button onclick="abrirModalNuevo()" class="fixed bottom-8 right-8 bg-slate-900 text-white w-16 h-16 rounded-full shadow-2xl flex items-center justify-center transition z-40"><i class="ph-bold ph-plus text-2xl"></i></button>
+            <button onclick="abrirModalNuevo()" class="fixed bottom-8 right-8 bg-slate-900 text-white w-16 h-16 rounded-full shadow-2xl flex items-center justify-center transition hover:scale-110 z-40"><i class="ph-bold ph-plus text-2xl"></i></button>
         </main>
 
-        <main id="viewHistorial" class="hidden max-w-2xl mx-auto p-6">
-            <button onclick="cerrarHistorial()" class="mb-6 font-black text-[10px] text-slate-400 uppercase flex items-center gap-2"><i class="ph-bold ph-caret-left"></i> Volver</button>
+        <main id="viewHistorial" class="hidden max-w-2xl mx-auto p-6 view-transition">
+            <div class="flex justify-between items-center mb-6">
+                <button onclick="cerrarHistorial()" class="font-black text-[10px] text-slate-900 bg-white px-4 py-2 rounded-full border shadow-sm uppercase flex items-center gap-2"><i class="ph-bold ph-caret-left"></i> Regresar</button>
+            </div>
             <div class="bg-white p-8 rounded-[2.5rem] border mb-6 text-center card-shadow relative">
                 <button onclick="abrirModalEditar()" class="absolute top-6 right-6 text-slate-300"><i class="ph-bold ph-pencil-simple text-xl"></i></button>
                 <h2 id="histNombre" class="text-3xl font-black uppercase italic tracking-tighter"></h2>
                 <p id="histSaldo" class="text-emerald-600 font-black text-xl mt-1"></p>
-                <button onclick="eliminarPrestamoCompleto()" class="mt-4 text-[10px] font-black text-red-200 uppercase">Eliminar Préstamo</button>
+                <button onclick="eliminarPrestamoCompleto()" class="mt-4 text-[10px] font-black text-red-300 uppercase">Eliminar Préstamo</button>
             </div>
             <div id="listaPagosHistorial" class="space-y-3"></div>
         </main>
@@ -110,17 +119,20 @@
             <p class="text-[10px] font-bold text-slate-400 uppercase mb-6">Introduce el PIN</p>
             <input type="password" id="inputPinAdmin" placeholder="••••" class="w-full p-4 bg-slate-50 border-2 border-slate-100 rounded-2xl font-black text-2xl text-center outline-none focus:border-emerald-500 transition-all mb-4">
             <div class="grid grid-cols-2 gap-3 w-full">
-                <button onclick="modalPinAdmin.close()" class="p-4 text-[10px] font-black uppercase text-slate-400">Cerrar</button>
+                <button onclick="modalPinAdmin.close()" class="p-4 text-[10px] font-black uppercase text-slate-400">Cancelar</button>
                 <button onclick="validarPinAdmin()" class="p-4 bg-slate-900 text-white rounded-xl font-black uppercase text-[10px]">Entrar</button>
             </div>
         </div>
     </dialog>
 
     <dialog id="modalCartera" class="rounded-[2rem] p-8 w-full max-w-xs border-none text-center relative shadow-xl">
-        <button onclick="this.closest('dialog').close()" class="absolute top-6 right-6 text-slate-300"><i class="ph-bold ph-x text-xl"></i></button>
         <h3 class="font-black uppercase mb-4 italic text-slate-400 text-xs">Nueva Cartera</h3>
-        <input type="text" id="nombreNuevaCartera" placeholder="Nombre de la cartera" class="w-full p-4 bg-slate-50 border rounded-xl mb-4 font-bold text-center outline-none">
-        <button onclick="crearCartera()" class="w-full p-4 bg-blue-600 text-white rounded-xl font-black uppercase">Crear Cartera</button>
+        <label>Nombre de la Cartera</label>
+        <input type="text" id="nombreNuevaCartera" placeholder="Ej: Negocio 1" class="w-full p-4 bg-slate-50 border rounded-xl mb-4 font-bold text-center outline-none focus:border-blue-500">
+        <div class="grid grid-cols-2 gap-2">
+            <button onclick="modalCartera.close()" class="p-4 text-[10px] font-black uppercase text-slate-400">Cancelar</button>
+            <button onclick="crearCartera()" class="p-4 bg-blue-600 text-white rounded-xl font-black uppercase">Crear</button>
+        </div>
     </dialog>
 
     <dialog id="modalPapelera" class="rounded-[2rem] p-8 w-full max-w-md border-none relative">
@@ -130,27 +142,40 @@
     </dialog>
 
     <dialog id="modalPago" class="rounded-[2rem] p-8 w-full max-w-xs border-none text-center relative">
-        <button onclick="this.closest('dialog').close()" class="absolute top-6 right-6 text-slate-300"><i class="ph-bold ph-x text-xl"></i></button>
         <h3 id="pagoTitle" class="font-black uppercase mb-4 text-[10px] text-slate-400">Abono</h3>
         <div class="space-y-4 mb-6">
-            <input type="date" id="fechaPago" class="w-full p-3 bg-slate-50 border rounded-xl font-bold text-center outline-none">
-            <div class="flex items-center justify-center gap-2"><input type="checkbox" id="checkTodoCapital"><span class="text-[10px] font-black uppercase text-slate-400">100% Capital</span></div>
-            <input type="number" id="montoPago" placeholder="0.00" class="w-full p-5 bg-slate-100 rounded-2xl font-black text-3xl text-center outline-none">
+            <div>
+                <label>Fecha de Pago</label>
+                <input type="date" id="fechaPago" class="w-full p-3 bg-slate-50 border rounded-xl font-bold text-center outline-none">
+            </div>
+            <div class="flex items-center justify-center gap-2">
+                <input type="checkbox" id="checkTodoCapital">
+                <span class="text-[10px] font-black uppercase text-slate-400">100% Directo a Capital</span>
+            </div>
+            <div>
+                <label>Monto a Recibir</label>
+                <input type="number" id="montoPago" placeholder="0.00" class="w-full p-5 bg-slate-100 rounded-2xl font-black text-3xl text-center outline-none focus:bg-emerald-50">
+            </div>
         </div>
-        <button onclick="confirmarPago()" class="w-full p-5 bg-slate-900 text-white rounded-2xl font-black uppercase">Confirmar Pago</button>
+        <div class="grid grid-cols-2 gap-2">
+            <button onclick="modalPago.close()" class="p-4 text-[10px] font-black uppercase text-slate-400">Cancelar</button>
+            <button onclick="confirmarPago()" class="p-4 bg-slate-900 text-white rounded-2xl font-black uppercase">Confirmar</button>
+        </div>
     </dialog>
 
     <dialog id="modalForm" class="rounded-[2rem] p-8 w-full max-w-sm border-none relative">
-        <button onclick="this.closest('dialog').close()" class="absolute top-6 right-6 text-slate-300"><i class="ph-bold ph-x text-xl"></i></button>
         <h3 id="formTitle" class="font-black mb-6 uppercase text-center">Datos Préstamo</h3>
         <div class="space-y-4">
-            <div><label>Cliente</label><input type="text" id="formNombre" class="w-full p-4 bg-slate-50 border rounded-2xl font-bold outline-none"></div>
-            <div><label>Monto</label><input type="number" id="formMonto" class="w-full p-4 bg-slate-50 border rounded-2xl font-bold outline-none"></div>
+            <div><label>Nombre del Cliente</label><input type="text" id="formNombre" placeholder="Nombre completo" class="w-full p-4 bg-slate-50 border rounded-2xl font-bold outline-none"></div>
+            <div><label>Monto a Prestar ($)</label><input type="number" id="formMonto" placeholder="0.00" class="w-full p-4 bg-slate-50 border rounded-2xl font-bold outline-none"></div>
             <div class="grid grid-cols-2 gap-2">
                 <div><label>Interés %</label><select id="formTasa" class="w-full p-4 bg-slate-50 border rounded-2xl font-bold outline-none"><option value="10">10%</option><option value="20" selected>20%</option></select></div>
                 <div><label>Días Gracia</label><input type="number" id="formGracia" value="0" class="w-full p-4 bg-slate-50 border rounded-2xl font-bold outline-none"></div>
             </div>
-            <button onclick="guardarPrestamo()" class="w-full p-5 bg-emerald-600 text-white rounded-2xl font-black uppercase">Guardar</button>
+            <div class="grid grid-cols-2 gap-2 pt-4">
+                <button onclick="modalForm.close()" class="p-4 text-[10px] font-black uppercase text-slate-400 text-center">Cerrar</button>
+                <button onclick="guardarPrestamo()" class="p-4 bg-emerald-600 text-white rounded-2xl font-black uppercase">Guardar</button>
+            </div>
         </div>
     </dialog>
 
@@ -170,11 +195,22 @@
                 </div>
             </div>
         </div>
-        <div class="p-4 bg-white"><button id="btnCompartirWA" class="w-full p-4 bg-[#25D366] text-white rounded-2xl font-black uppercase flex items-center justify-center gap-2"><i class="ph-fill ph-whatsapp-logo text-xl"></i> Compartir WhatsApp</button></div>
+        <div class="p-4 bg-white grid grid-cols-2 gap-2">
+            <button onclick="modalReciboImagen.close()" class="p-4 text-[10px] font-black uppercase text-slate-400">Cerrar</button>
+            <button id="btnCompartirWA" class="p-4 bg-[#25D366] text-white rounded-2xl font-black uppercase flex items-center justify-center gap-2"><i class="ph-fill ph-whatsapp-logo text-xl"></i> WhatsApp</button>
+        </div>
     </dialog>
 
     <script>
         let currentUser, idCarteraActual, pActivo, modoEdicionForm, idPagoAEditar, tabActual = 'activos', timerAdmin;
+
+        // Formateador de Fecha Amigable (Día Mes Año)
+        function formatFecha(fechaString) {
+            if(!fechaString) return "-";
+            const meses = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"];
+            const d = new Date(fechaString + "T12:00:00"); 
+            return `${d.getDate().toString().padStart(2, '0')} ${meses[d.getMonth()]} ${d.getFullYear()}`;
+        }
 
         async function init() {
             const { data: { session } } = await _supabase.auth.getSession();
@@ -225,7 +261,6 @@
             totalCapital.innerText = `$${tCap.toFixed(2)}`; totalIntereses.innerText = `$${tInt.toFixed(2)}`;
         }
 
-        // --- PAPELERA & PIN ---
         function iniciarPresionAdmin() { timerAdmin = setTimeout(() => { inputPinAdmin.value = ""; modalPinAdmin.showModal(); }, 2000); }
         function cancelarPresionAdmin() { clearTimeout(timerAdmin); }
         async function validarPinAdmin() { if (inputPinAdmin.value === '1234') { modalPinAdmin.close(); abrirPapelera(); } else { alert("PIN Erróneo"); } }
@@ -248,25 +283,6 @@
             modalPapelera.close(); cargarDatos();
         }
 
-        async function eliminarPago(id) {
-            if(confirm("¿Enviar a papelera?")) {
-                const { data: p } = await _supabase.from('pagos').select('*').eq('id', id).single();
-                await _supabase.from('papelera').insert([{ tipo: 'pago', datos: p, user_id: currentUser.id }]);
-                await _supabase.from('pagos').delete().eq('id', id);
-                verHistorial(pActivo.id);
-            }
-        }
-
-        async function eliminarPrestamoCompleto() {
-            if(confirm("¿Eliminar Préstamo?")) {
-                const { data: p } = await _supabase.from('prestamos').select('*').eq('id', pActivo.id).single();
-                await _supabase.from('papelera').insert([{ tipo: 'prestamo', datos: p, user_id: currentUser.id }]);
-                await _supabase.from('prestamos').delete().eq('id', pActivo.id);
-                cerrarHistorial();
-            }
-        }
-
-        // --- PAGO ---
         function abrirModalPago(id) { 
             pActivo = {id: id}; idPagoAEditar = null; 
             montoPago.value = ""; fechaPago.value = new Date().toISOString().split('T')[0];
@@ -280,28 +296,48 @@
             else await _supabase.from('pagos').insert([{ ...obj, prestamo_id: pActivo.id }]);
             modalPago.close(); 
             if(pActivo.id) await verHistorial(pActivo.id); else cargarDatos();
-            if(!idPagoAEditar) abrirReciboVisual(m, a);
+            if(!idPagoAEditar) abrirReciboVisual(m, a, f);
         }
 
-        // --- HISTORIAL ---
         async function verHistorial(id) {
             const { data: p } = await _supabase.from('prestamos').select('*, clientes(*), pagos(*)').eq('id', id).single();
             pActivo = p; const calc = calcularSaldo(p);
-            viewDashboard.classList.add('hidden'); viewHistorial.classList.remove('hidden');
+            
+            // Efecto Visual de Transición
+            viewDashboard.classList.add('hidden'); 
+            viewHistorial.classList.remove('hidden');
+            
             histNombre.innerText = p.clientes.nombre; histSaldo.innerText = `$${calc.capital.toFixed(2)}`;
             listaPagosHistorial.innerHTML = p.pagos.sort((a,b)=>new Date(b.fecha_pago)-new Date(a.fecha_pago)).map(pg => `
                 <div class="bg-white p-5 rounded-[2rem] border flex justify-between items-center shadow-sm">
-                    <div><p class="text-[9px] font-black text-slate-300 uppercase">${pg.fecha_pago}</p><p class="text-xl font-black">$${parseFloat(pg.monto_pagado).toFixed(2)}</p></div>
+                    <div><p class="text-[9px] font-black text-slate-400 uppercase">${formatFecha(pg.fecha_pago)}</p><p class="text-xl font-black">$${parseFloat(pg.monto_pagado).toFixed(2)}</p></div>
                     <div class="flex gap-1">
-                        <button onclick="abrirReciboHistorial('${pg.id}')" class="text-emerald-500 p-2"><i class="ph-bold ph-whatsapp-logo text-2xl"></i></button>
+                        <button onclick="abrirReciboHistorial('${pg.id}')" title="Comprobante" class="text-emerald-500 p-2"><i class="ph-bold ph-whatsapp-logo text-2xl"></i></button>
                         <button onclick="editarPago('${pg.id}', ${pg.monto_pagado}, '${pg.fecha_pago}', ${pg.aplicar_interes})" class="text-blue-400 p-2"><i class="ph-bold ph-pencil-simple text-2xl"></i></button>
                         <button onclick="eliminarPago('${pg.id}')" class="text-red-200 p-2"><i class="ph-bold ph-trash text-2xl"></i></button>
                     </div></div>`).join('');
         }
 
+        async function eliminarPago(id) {
+            if(confirm("¿Enviar este pago a la papelera?")) {
+                const { data: p } = await _supabase.from('pagos').select('*').eq('id', id).single();
+                await _supabase.from('papelera').insert([{ tipo: 'pago', datos: p, user_id: currentUser.id }]);
+                await _supabase.from('pagos').delete().eq('id', id);
+                verHistorial(pActivo.id);
+            }
+        }
+
+        async function eliminarPrestamoCompleto() {
+            if(confirm("¿Eliminar Préstamo? Se enviará a la papelera.")) {
+                const { data: p } = await _supabase.from('prestamos').select('*').eq('id', pActivo.id).single();
+                await _supabase.from('papelera').insert([{ tipo: 'prestamo', datos: p, user_id: currentUser.id }]);
+                await _supabase.from('prestamos').delete().eq('id', pActivo.id);
+                cerrarHistorial();
+            }
+        }
+
         function editarPago(id, m, f, a) { idPagoAEditar = id; montoPago.value = m; fechaPago.value = f; checkTodoCapital.checked = !a; modalPago.showModal(); }
 
-        // --- CALCULOS ---
         function calcularSaldo(p) {
             let c = parseFloat(p.monto_prestado), t = p.tasa_interes / 100;
             (p.pagos || []).sort((a,b)=>new Date(a.fecha_pago)-new Date(b.fecha_pago)).forEach(x => {
@@ -319,17 +355,13 @@
             if(pg) abrirReciboVisual(pg.monto_pagado, pg.aplicar_interes, pg.fecha_pago);
         }
 
-        async function abrirReciboVisual(montoP, aplicaInt, fechaP = null) {
+        async function abrirReciboVisual(montoP, aplicaInt, fechaP) {
             const { data: p } = await _supabase.from('prestamos').select('*, clientes(*), pagos(*)').eq('id', pActivo.id).single();
-            const fechaRecibo = fechaP || new Date().toISOString().split('T')[0];
-            
-            // Simular saldo previo al pago seleccionado
             let capPrevio = parseFloat(p.monto_prestado), tD = p.tasa_interes / 100;
             const pagosOrdenados = p.pagos.sort((a,b) => new Date(a.fecha_pago) - new Date(b.fecha_pago));
             
-            // Recorrer pagos previos al pago que estamos visualizando
             pagosOrdenados.forEach(pg => {
-                if(new Date(pg.fecha_pago) < new Date(fechaRecibo)) {
+                if(new Date(pg.fecha_pago) < new Date(fechaP)) {
                     const ma = parseFloat(pg.monto_pagado);
                     if (pg.aplicar_interes) { const i = capPrevio * tD; if (ma >= i) capPrevio -= (ma - i); } else capPrevio -= ma;
                 }
@@ -343,7 +375,7 @@
             reciboMonto.innerText = `$${parseFloat(montoP).toFixed(2)}`; 
             reciboInteres.innerText = `$${interesPagado.toFixed(2)}`; 
             reciboAbonoCapital.innerText = `$${abonoCapital.toFixed(2)}`;
-            reciboFechaSimple.innerText = fechaRecibo; 
+            reciboFechaSimple.innerText = formatFecha(fechaP); 
             reciboSaldo.innerText = `$${saldoFinal.toFixed(2)}`;
             
             modalReciboImagen.showModal();
@@ -368,7 +400,7 @@
             }
         }
 
-        async function crearCartera() { await _supabase.from('carteras').insert([{ nombre: nombreNuevaCartera.value, user_id: currentUser.id }]); modalCartera.close(); cargarCarteras(); }
+        async function crearCartera() { if(!nombreNuevaCartera.value) return; await _supabase.from('carteras').insert([{ nombre: nombreNuevaCartera.value, user_id: currentUser.id }]); modalCartera.close(); cargarCarteras(); }
         function cerrarHistorial() { viewHistorial.classList.add('hidden'); viewDashboard.classList.remove('hidden'); cargarDatos(); }
         function filtrarTab(t) { tabActual = t; cargarDatos(); }
         function cambiarCartera(id) { idCarteraActual = id; cargarDatos(); }
