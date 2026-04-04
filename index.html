@@ -37,7 +37,6 @@
                 </div>
                 <p class="text-[10px] font-bold text-slate-400 uppercase mt-2 italic">by GierelAxel.dev</p>
             </div>
-
             <div id="view-auth-main">
                 <div class="space-y-4">
                     <input type="email" id="authEmail" placeholder="Correo" class="w-full p-4 bg-slate-50 border rounded-2xl font-bold outline-none focus:border-emerald-500">
@@ -49,28 +48,25 @@
                 </div>
                 <button onclick="switchAuthView('view-auth-reset')" class="mt-6 text-[10px] font-black text-slate-400 uppercase hover:text-emerald-500 transition-colors">¿Olvidaste tu contraseña?</button>
             </div>
-
             <div id="view-auth-reset" class="hidden">
                 <p class="text-[10px] font-black text-slate-400 uppercase mb-4 text-center">Recuperar acceso</p>
                 <input type="email" id="resetEmailInput" placeholder="Tu correo de registro" class="w-full p-4 bg-slate-50 border rounded-2xl font-bold outline-none mb-4 focus:border-emerald-500">
                 <button onclick="handleResetRequest()" class="w-full p-4 bg-emerald-500 text-white rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-lg active:scale-95 transition">Enviar Enlace</button>
                 <button onclick="switchAuthView('view-auth-main')" class="mt-4 text-[10px] font-black text-slate-400 uppercase">Volver</button>
             </div>
-
             <div id="view-auth-new-pass" class="hidden text-left">
                 <p class="text-[10px] font-black text-emerald-500 uppercase mb-4 text-center tracking-widest italic">Nueva Contraseña Detectada</p>
                 <label>Nueva Contraseña</label>
                 <input type="password" id="newPasswordInput" placeholder="Mínimo 6 caracteres" class="w-full p-4 bg-slate-50 border rounded-2xl font-bold outline-none mb-4 focus:border-emerald-500">
                 <button onclick="handleFinalReset()" class="w-full p-4 bg-slate-900 text-white rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-lg active:scale-95 transition">Actualizar y Entrar</button>
             </div>
-
             <p id="authError" class="text-red-500 text-[10px] font-bold mt-4 uppercase leading-tight"></p>
         </div>
     </div>
 
     <div id="mainApp" class="hidden">
         <nav class="bg-white border-b p-4 sticky top-0 z-50 flex justify-between items-center shadow-sm">
-            <div class="flex flex-col items-start">
+            <div class="flex flex-col items-start cursor-pointer" onclick="verificarAccesoPapelera()">
                 <div class="flex items-center gap-1">
                     <span class="text-xl font-extrabold text-slate-950 tracking-tighter uppercase">Prest<span class="text-emerald-500">app</span></span>
                     <i class="ph-fill ph-lightning text-xl text-amber-400"></i>
@@ -122,6 +118,12 @@
             <div id="listaPagosHistorial" class="space-y-3"></div>
         </main>
     </div>
+
+    <dialog id="modalPapelera" class="rounded-[2rem] p-8 w-full max-w-md border-none relative">
+        <button onclick="this.closest('dialog').close()" class="absolute top-6 right-6 text-slate-300"><i class="ph-bold ph-x text-xl"></i></button>
+        <h3 class="font-black mb-6 uppercase italic text-xl text-center">Papelera de Reciclaje</h3>
+        <div id="listaPapelera" class="space-y-3 max-h-96 overflow-y-auto"></div>
+    </dialog>
 
     <dialog id="modalForm" class="rounded-[2rem] p-8 w-full max-w-sm border-none relative">
         <button onclick="this.closest('dialog').close()" class="absolute top-6 right-6 text-slate-300"><i class="ph-bold ph-x text-xl"></i></button>
@@ -189,23 +191,20 @@
         let currentUser = null, idCarteraActual = null, pActivo = null, modoEdicionForm = false, idPagoAEditar = null, tabActual = 'activos';
 
         async function init() {
-            // DETECTAR RECUPERACIÓN ANTES DE CUALQUIER COSA
             if (window.location.hash.includes('type=recovery')) {
                 document.getElementById('authScreen').classList.remove('hidden');
                 document.getElementById('mainApp').classList.add('hidden');
                 switchAuthView('view-auth-new-pass');
                 return; 
             }
-
             const { data: { session } } = await _supabase.auth.getSession();
             if (session) {
                 currentUser = session.user;
-                const { data: perfil, error } = await _supabase.from('perfiles').select('aprobado').eq('id', currentUser.id).single();
-                if (error || !perfil || !perfil.aprobado) {
+                const { data: perfil } = await _supabase.from('perfiles').select('aprobado').eq('id', currentUser.id).single();
+                if (!perfil?.aprobado) {
                     await _supabase.auth.signOut();
                     document.getElementById('authError').innerText = "Cuenta pendiente de aprobación.";
                     document.getElementById('authScreen').classList.remove('hidden');
-                    document.getElementById('mainApp').classList.add('hidden');
                     return;
                 }
                 document.getElementById('authScreen').classList.add('hidden');
@@ -213,56 +212,34 @@
                 await cargarCarteras();
             } else {
                 document.getElementById('authScreen').classList.remove('hidden');
-                document.getElementById('mainApp').classList.add('hidden');
             }
         }
 
-        // --- AUTH LOGIC ---
+        // --- AUTH ---
         function switchAuthView(viewId) {
-            ['view-auth-main', 'view-auth-reset', 'view-auth-new-pass'].forEach(id => {
-                document.getElementById(id).classList.add('hidden');
-            });
+            ['view-auth-main', 'view-auth-reset', 'view-auth-new-pass'].forEach(id => document.getElementById(id).classList.add('hidden'));
             document.getElementById(viewId).classList.remove('hidden');
-            document.getElementById('authError').innerText = "";
         }
 
         async function handleAuth(type) {
             const email = authEmail.value, password = authPassword.value;
-            if (!email || !password) return;
-            let result;
-            if (type === 'signup') {
-                result = await _supabase.auth.signUp({ email, password });
-                if (!result.error) alert("Registro exitoso. Solicita aprobación.");
-            } else {
-                result = await _supabase.auth.signInWithPassword({ email, password });
-            }
+            let result = type === 'signup' ? await _supabase.auth.signUp({ email, password }) : await _supabase.auth.signInWithPassword({ email, password });
             if (result.error) authError.innerText = result.error.message; else init();
         }
 
         async function handleResetRequest() {
-            const email = resetEmailInput.value;
-            if (!email) return;
-            const { error } = await _supabase.auth.resetPasswordForEmail(email, {
-                redirectTo: window.location.origin + window.location.pathname
-            });
-            if (error) authError.innerText = error.message;
-            else { alert("Enlace enviado. Revisa tu correo."); switchAuthView('view-auth-main'); }
+            const { error } = await _supabase.auth.resetPasswordForEmail(resetEmailInput.value, { redirectTo: window.location.origin + window.location.pathname });
+            if (error) authError.innerText = error.message; else { alert("Enlace enviado."); switchAuthView('view-auth-main'); }
         }
 
         async function handleFinalReset() {
-            const newPass = newPasswordInput.value;
-            if (newPass.length < 6) { authError.innerText = "Mínimo 6 caracteres."; return; }
-            const { error } = await _supabase.auth.updateUser({ password: newPass });
-            if (error) authError.innerText = error.message;
-            else {
-                alert("¡Contraseña actualizada!");
-                window.location.hash = ""; window.location.reload();
-            }
+            const { error } = await _supabase.auth.updateUser({ password: newPasswordInput.value });
+            if (error) authError.innerText = error.message; else { alert("¡Actualizada!"); window.location.hash = ""; window.location.reload(); }
         }
 
         async function handleLogout() { await _supabase.auth.signOut(); window.location.reload(); }
 
-        // --- CARTERAS Y DATOS ---
+        // --- NEGOCIO ---
         async function cargarCarteras() {
             const { data: carteras } = await _supabase.from('carteras').select('*');
             if (carteras?.length) {
@@ -286,143 +263,139 @@
                 if(!esFin) { tCap += calc.capital; tInt += calc.interes; }
                 if ((tabActual === 'activos' && !esFin) || (tabActual === 'finalizados' && esFin)) {
                     const mora = verificarMora(p.pagos, p.dias_gracia || 0);
-                    tbody.innerHTML += `
-                        <tr class="border-b border-slate-50 hover:bg-slate-50 cursor-pointer" onclick="verHistorial('${p.id}')">
-                            <td class="p-4 md:p-6">
-                                ${(!esFin && mora) ? `<span class="badge-mora bg-red-100 text-red-600 text-[8px] font-black px-2 py-0.5 rounded-full block w-fit mb-1 uppercase">Mora</span>` : ''}
-                                <div class="font-black uppercase text-[11px] md:text-sm text-slate-700">${p.clientes.nombre}</div>
-                            </td>
-                            <td class="p-4 md:p-6 text-right">
-                                <div class="font-black text-sm md:text-lg">$${calc.capital.toFixed(2)}</div>
-                                <div class="text-[8px] md:text-[10px] text-emerald-500 font-black">${esFin ? 'PAGADO' : '+$' + calc.interes.toFixed(2)}</div>
-                            </td>
-                            <td class="p-4 md:p-6 text-center" onclick="event.stopPropagation()">
-                                ${!esFin ? `<button onclick="abrirModalPago('${p.id}')" class="w-10 h-10 bg-emerald-500 text-white rounded-xl mx-auto flex items-center justify-center"><i class="ph-bold ph-hand-coins"></i></button>` : `<i class="ph-bold ph-check-circle text-emerald-500 text-2xl"></i>`}
-                            </td>
-                        </tr>`;
+                    tbody.innerHTML += `<tr class="border-b border-slate-50 hover:bg-slate-50 cursor-pointer" onclick="verHistorial('${p.id}')">
+                        <td class="p-4 md:p-6">${(!esFin && mora) ? `<span class="badge-mora bg-red-100 text-red-600 text-[8px] font-black px-2 py-0.5 rounded-full block w-fit mb-1 uppercase">Mora</span>` : ''}
+                        <div class="font-black uppercase text-[11px] md:text-sm text-slate-700">${p.clientes.nombre}</div></td>
+                        <td class="p-4 md:p-6 text-right"><div class="font-black text-sm md:text-lg">$${calc.capital.toFixed(2)}</div>
+                        <div class="text-[8px] md:text-[10px] text-emerald-500 font-black">${esFin ? 'PAGADO' : '+$' + calc.interes.toFixed(2)}</div></td>
+                        <td class="p-4 md:p-6 text-center" onclick="event.stopPropagation()">
+                        ${!esFin ? `<button onclick="abrirModalPago('${p.id}')" class="w-10 h-10 bg-emerald-500 text-white rounded-xl mx-auto flex items-center justify-center"><i class="ph-bold ph-hand-coins"></i></button>` : `<i class="ph-bold ph-check-circle text-emerald-500 text-2xl"></i>`}</td></tr>`;
                 }
             });
             totalCapital.innerText = `$${tCap.toFixed(2)}`; totalIntereses.innerText = `$${tInt.toFixed(2)}`;
         }
 
-        // --- HISTORIAL CON EDICIÓN ---
         async function verHistorial(id) { 
             const { data: p } = await _supabase.from('prestamos').select('*, clientes(*), pagos(*)').eq('id', id).single(); 
             pActivo = p; const calc = calcularSaldo(p); 
             viewDashboard.classList.add('hidden'); viewHistorial.classList.remove('hidden'); 
             histNombre.innerText = p.clientes.nombre; histSaldo.innerText = `Saldo: $${calc.capital.toFixed(2)}`; 
-            
             listaPagosHistorial.innerHTML = (p.pagos || []).sort((a,b) => new Date(b.fecha_pago) - new Date(a.fecha_pago)).map(pg => `
                 <div class="bg-white p-5 rounded-[2rem] border flex justify-between items-center shadow-sm">
-                    <div>
-                        <p class="text-[9px] font-black text-slate-300 uppercase">${new Date(pg.fecha_pago).toLocaleDateString('es-ES', {timeZone: 'UTC'})}</p>
-                        <p class="text-xl font-black tracking-tight">$${parseFloat(pg.monto_pagado).toFixed(2)} ${!pg.aplicar_interes ? '<span class="text-[10px] text-amber-500"> (Sólo Cap.)</span>' : ''}</p>
-                    </div>
+                    <div><p class="text-[9px] font-black text-slate-300 uppercase">${new Date(pg.fecha_pago).toLocaleDateString('es-ES', {timeZone: 'UTC'})}</p>
+                    <p class="text-xl font-black tracking-tight">$${parseFloat(pg.monto_pagado).toFixed(2)} ${!pg.aplicar_interes ? '<span class="text-[10px] text-amber-500">(Sólo Cap.)</span>' : ''}</p></div>
                     <div class="flex gap-1">
                         <button onclick="abrirReciboVisual(${pg.monto_pagado})" class="text-emerald-500 p-2"><i class="ph-bold ph-whatsapp-logo text-2xl"></i></button>
                         <button onclick="editarPago('${pg.id}', ${pg.monto_pagado}, '${pg.fecha_pago}', ${pg.aplicar_interes})" class="text-blue-400 p-2"><i class="ph-bold ph-pencil-simple text-2xl"></i></button>
                         <button onclick="eliminarPago('${pg.id}')" class="text-red-200 p-2"><i class="ph-bold ph-trash text-2xl"></i></button>
-                    </div>
-                </div>`).join(''); 
+                    </div></div>`).join(''); 
         }
 
-        function editarPago(id, monto, fecha, aplicaInteres) {
-            idPagoAEditar = id;
-            pagoTitle.innerText = "Editar Abono";
-            montoPago.value = monto;
-            fechaPago.value = fecha;
-            document.getElementById('checkTodoCapital').checked = !aplicaInteres;
-            modalPago.showModal();
+        // --- PAPELERA ---
+        function verificarAccesoPapelera() {
+            const pass = prompt("Acceso Administrador:");
+            if (pass === '1234') abrirPapelera(); else if(pass !== null) alert("Acceso denegado");
         }
 
-        async function confirmarPago() { 
+        async function abrirPapelera() {
+            const { data: items } = await _supabase.from('papelera').select('*').order('created_at', { ascending: false });
+            const lista = document.getElementById('listaPapelera');
+            lista.innerHTML = items.length ? '' : '<p class="text-center text-[10px] font-bold text-slate-400 py-10">PAPELERA VACÍA</p>';
+            items.forEach(item => {
+                const d = item.datos;
+                lista.innerHTML += `<div class="bg-slate-50 p-4 rounded-2xl flex justify-between items-center border">
+                    <div><p class="text-[8px] font-black uppercase text-blue-500">${item.tipo}</p>
+                    <p class="text-xs font-bold text-slate-700">${item.tipo === 'pago' ? '$' + d.monto_pagado : (d.clientes?.nombre || 'Préstamo ID:' + d.id)}</p></div>
+                    <button onclick="restaurarItem('${item.id}')" class="bg-emerald-500 text-white px-3 py-1 rounded-lg text-[10px] font-black uppercase">Restaurar</button>
+                </div>`;
+            });
+            modalPapelera.showModal();
+        }
+
+        async function restaurarItem(papeleraId) {
+            const { data: item } = await _supabase.from('papelera').select('*').eq('id', papeleraId).single();
+            if (!item) return;
             try {
-                const m = parseFloat(montoPago.value), f = fechaPago.value; if(!m || !f) return; 
-                const aplicaInt = !document.getElementById('checkTodoCapital').checked; 
-                const datos = { monto_pagado: m, aplicar_interes: aplicaInt, fecha_pago: f, user_id: currentUser.id }; 
-                if(idPagoAEditar) { await _supabase.from('pagos').update(datos).eq('id', idPagoAEditar); } 
-                else { await _supabase.from('pagos').insert([{ ...datos, prestamo_id: pActivo.id }]); }
-                modalPago.close(); 
-                if(pActivo.id) await verHistorial(pActivo.id); else cargarDatos(); 
-                if(!idPagoAEditar) abrirReciboVisual(m); 
-            } catch (err) { alert("Error: " + err.message); }
+                const tabla = item.tipo === 'pago' ? 'pagos' : 'prestamos';
+                await _supabase.from(tabla).insert([item.datos]);
+                await _supabase.from('papelera').delete().eq('id', papeleraId);
+                alert("Restaurado correctamente"); modalPapelera.close(); cargarDatos();
+            } catch (e) { alert("Error al restaurar: " + e.message); }
         }
 
-        // --- FUNCIONES AUXILIARES ---
-        function filtrarTab(t) { 
-            tabActual = t; 
-            const tA = document.getElementById('tabActivos'), tF = document.getElementById('tabFinalizados');
-            if (t === 'activos') { tA.classList.add('tab-active'); tF.classList.remove('tab-active'); } 
-            else { tF.classList.add('tab-active'); tA.classList.remove('tab-active'); }
-            cargarDatos(); 
+        async function eliminarPago(id) {
+            if(confirm("¿Enviar pago a la papelera?")) {
+                const { data: pago } = await _supabase.from('pagos').select('*').eq('id', id).single();
+                await _supabase.from('papelera').insert([{ tipo: 'pago', datos: pago, user_id: currentUser.id }]);
+                await _supabase.from('pagos').delete().eq('id', id);
+                verHistorial(pActivo.id);
+            }
+        }
+
+        async function eliminarPrestamoCompleto() {
+            if(confirm("¿Mover préstamo a la papelera?")) {
+                const { data: prestamo } = await _supabase.from('prestamos').select('*').eq('id', pActivo.id).single();
+                await _supabase.from('papelera').insert([{ tipo: 'prestamo', datos: prestamo, user_id: currentUser.id }]);
+                await _supabase.from('prestamos').delete().eq('id', pActivo.id);
+                cerrarHistorial();
+            }
+        }
+
+        // --- AUXILIARES ---
+        function editarPago(id, m, f, a) { idPagoAEditar = id; pagoTitle.innerText = "Editar Abono"; montoPago.value = m; fechaPago.value = f; document.getElementById('checkTodoCapital').checked = !a; modalPago.showModal(); }
+        async function confirmarPago() { 
+            const m = parseFloat(montoPago.value), f = fechaPago.value, a = !document.getElementById('checkTodoCapital').checked;
+            const dat = { monto_pagado: m, aplicar_interes: a, fecha_pago: f, user_id: currentUser.id };
+            if(idPagoAEditar) await _supabase.from('pagos').update(dat).eq('id', idPagoAEditar); 
+            else await _supabase.from('pagos').insert([{ ...dat, prestamo_id: pActivo.id }]);
+            modalPago.close(); if(pActivo.id) await verHistorial(pActivo.id); else cargarDatos();
+            if(!idPagoAEditar) abrirReciboVisual(m);
         }
 
         function calcularSaldo(p) { 
             let cap = parseFloat(p.monto_prestado), tasa = p.tasa_interes / 100; 
             (p.pagos || []).sort((a,b) => new Date(a.fecha_pago) - new Date(b.fecha_pago)).forEach(pg => { 
                 const m = parseFloat(pg.monto_pagado); if (pg.aplicar_interes) { const i = cap * tasa; if (m >= i) cap -= (m - i); } else cap -= m; 
-            }); 
-            return { capital: Math.max(0, cap), interes: Math.max(0, cap * tasa) }; 
+            }); return { capital: Math.max(0, cap), interes: Math.max(0, cap * tasa) }; 
         }
 
-        function verificarMora(pagos, diasGracia) { 
-            const hoy = new Date(), d = hoy.getDate(); 
-            const l15 = 15 + parseInt(diasGracia), l30 = 30 + parseInt(diasGracia); 
-            let check = d > l30 ? 30 : (d > l15 ? 15 : 0); if (!check) return false; 
-            return !pagos?.some(pg => { const fp = new Date(pg.fecha_pago); return fp.getUTCMonth() === hoy.getUTCMonth() && fp.getUTCDate() >= (check === 15 ? 1 : 16); }); 
+        function verificarMora(pgs, g) { 
+            const h = new Date(), d = h.getDate(), l15 = 15+parseInt(g), l30 = 30+parseInt(g), chk = d > l30 ? 30 : (d > l15 ? 15 : 0); 
+            if (!chk) return false; return !pgs?.some(pg => { const f = new Date(pg.fecha_pago); return f.getUTCMonth() === h.getUTCMonth() && f.getUTCDate() >= (chk === 15 ? 1 : 16); }); 
         }
 
         function abrirModalNuevo() { modoEdicionForm = false; formTitle.innerText = "Nuevo Préstamo"; formNombre.value = ''; formMonto.value = ''; formTasa.value = '20'; formGracia.value = '0'; modalForm.showModal(); }
-        
-        function abrirModalEditar() { 
-            modoEdicionForm = true; formTitle.innerText = "Editar Préstamo"; 
-            formNombre.value = pActivo.clientes.nombre; formMonto.value = pActivo.monto_prestado; 
-            formTasa.value = pActivo.tasa_interes; formGracia.value = pActivo.dias_gracia || 0; 
-            modalForm.showModal(); 
-        }
-
+        function abrirModalEditar() { modoEdicionForm = true; formTitle.innerText = "Editar Préstamo"; formNombre.value = pActivo.clientes.nombre; formMonto.value = pActivo.monto_prestado; formTasa.value = pActivo.tasa_interes; formGracia.value = pActivo.dias_gracia || 0; modalForm.showModal(); }
         async function guardarPrestamo() { 
-            try {
-                if(modoEdicionForm) { 
-                    await _supabase.from('clientes').update({ nombre: formNombre.value }).eq('id', pActivo.cliente_id); 
-                    await _supabase.from('prestamos').update({ monto_prestado: parseFloat(formMonto.value), tasa_interes: parseInt(formTasa.value), dias_gracia: parseInt(formGracia.value) }).eq('id', pActivo.id); 
-                    modalForm.close(); await verHistorial(pActivo.id); 
-                } else { 
-                    const { data: cl } = await _supabase.from('clientes').insert([{ nombre: formNombre.value, user_id: currentUser.id, cartera_id: idCarteraActual }]).select().single(); 
-                    if (cl) { await _supabase.from('prestamos').insert([{ cliente_id: cl.id, cartera_id: idCarteraActual, user_id: currentUser.id, monto_prestado: parseFloat(formMonto.value), tasa_interes: parseInt(formTasa.value), dias_gracia: parseInt(formGracia.value) }]); }
-                    modalForm.close(); cargarDatos(); 
-                } 
-            } catch (err) { alert("Error: " + err.message); }
+            if(modoEdicionForm) { 
+                await _supabase.from('clientes').update({ nombre: formNombre.value }).eq('id', pActivo.cliente_id); 
+                await _supabase.from('prestamos').update({ monto_prestado: parseFloat(formMonto.value), tasa_interes: parseInt(formTasa.value), dias_gracia: parseInt(formGracia.value) }).eq('id', pActivo.id); 
+                modalForm.close(); await verHistorial(pActivo.id); 
+            } else { 
+                const { data: cl } = await _supabase.from('clientes').insert([{ nombre: formNombre.value, user_id: currentUser.id, cartera_id: idCarteraActual }]).select().single(); 
+                if (cl) await _supabase.from('prestamos').insert([{ cliente_id: cl.id, cartera_id: idCarteraActual, user_id: currentUser.id, monto_prestado: parseFloat(formMonto.value), tasa_interes: parseInt(formTasa.value), dias_gracia: parseInt(formGracia.value) }]);
+                modalForm.close(); cargarDatos(); 
+            } 
         }
 
-        function abrirModalPago(id) { pActivo = {id}; idPagoAEditar = null; pagoTitle.innerText = "Registrar Abono"; montoPago.value = ''; fechaPago.value = new Date().toISOString().split('T')[0]; document.getElementById('checkTodoCapital').checked = false; modalPago.showModal(); }
-
+        function filtrarTab(t) { tabActual = t; cargarDatos(); }
         async function abrirReciboVisual(m) {
             const { data: p } = await _supabase.from('prestamos').select('*, clientes(*), pagos(*)').eq('id', pActivo.id).single();
             const pO = p.pagos.sort((a,b) => new Date(a.fecha_pago) - new Date(b.fecha_pago)); pO.pop();
             let cP = parseFloat(p.monto_prestado), tD = p.tasa_interes / 100;
             pO.forEach(pg => { const ma = parseFloat(pg.monto_pagado); if (pg.aplicar_interes) { const i = cP * tD; if (ma >= i) cP -= (ma - i); } else cP -= ma; });
-            const sC = document.getElementById('checkTodoCapital').checked;
-            const iC = sC ? 0 : Math.min(m, cP * tD), aC = sC ? m : Math.max(0, m - (cP * tD));
-            reciboCliente.innerText = p.clientes.nombre; reciboMonto.innerText = `$${m.toFixed(2)}`;
-            reciboInteres.innerText = `$${iC.toFixed(2)}`; reciboAbonoCapital.innerText = `$${aC.toFixed(2)}`;
+            const sC = document.getElementById('checkTodoCapital').checked, iC = sC ? 0 : Math.min(m, cP * tD), aC = sC ? m : Math.max(0, m - (cP * tD));
+            reciboCliente.innerText = p.clientes.nombre; reciboMonto.innerText = `$${m.toFixed(2)}`; reciboInteres.innerText = `$${iC.toFixed(2)}`; reciboAbonoCapital.innerText = `$${aC.toFixed(2)}`;
             reciboFechaSimple.innerText = new Date().toLocaleDateString('es-ES'); reciboSaldo.innerText = `$${Math.max(0, cP - aC).toFixed(2)}`;
             modalReciboImagen.showModal();
             btnCompartirWA.onclick = async () => {
                 const canvas = await html2canvas(document.getElementById('areaRecibo'), { backgroundColor: '#F8FAFC', scale: 2 });
-                canvas.toBlob(async (blob) => {
-                    const f = new File([blob], `Recibo_${p.clientes.nombre}.png`, { type: 'image/png' });
-                    if (navigator.share) await navigator.share({ files: [f] });
-                });
+                canvas.toBlob(async (blob) => { const f = new File([blob], `Recibo.png`, { type: 'image/png' }); if (navigator.share) await navigator.share({ files: [f] }); });
             };
         }
-
-        async function crearCartera() { if(!nombreNuevaCartera.value) return; await _supabase.from('carteras').insert([{ nombre: nombreNuevaCartera.value, user_id: currentUser.id }]); modalCartera.close(); cargarCarteras(); }
-        async function eliminarPago(id) { if(confirm("¿Eliminar pago?")) { await _supabase.from('pagos').delete().eq('id', id); verHistorial(pActivo.id); } }
-        async function eliminarPrestamoCompleto() { if(confirm("¿Eliminar préstamo?")) { await _supabase.from('prestamos').delete().eq('id', pActivo.id); cerrarHistorial(); } }
+        async function crearCartera() { await _supabase.from('carteras').insert([{ nombre: nombreNuevaCartera.value, user_id: currentUser.id }]); modalCartera.close(); cargarCarteras(); }
         function cerrarHistorial() { viewHistorial.classList.add('hidden'); viewDashboard.classList.remove('hidden'); cargarDatos(); }
         function cambiarCartera(id) { idCarteraActual = id; cargarDatos(); }
-        
         window.onload = init;
     </script>
 </body>
