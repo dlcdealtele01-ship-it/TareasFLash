@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Tutor | Tareas Flash</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="bg-slate-900 text-white font-sans min-h-screen flex items-center justify-center overflow-hidden">
+
+    <div id="loginArea" class="w-full max-w-md p-10 bg-slate-800 rounded-[3rem] shadow-2xl border border-slate-700 mx-4 transition-all duration-500">
+        <div class="text-center mb-8">
+            <img src="logos.jpeg" class="w-24 h-24 rounded-full mx-auto mb-6 border-4 border-amber-400 shadow-xl">
+            <h1 class="text-3xl font-black italic tracking-tighter">PANEL <span class="text-amber-400">TUTOR</span></h1>
+            <p class="text-slate-400 text-xs mt-3 uppercase tracking-widest font-bold">Acceso Administrativo</p>
+        </div>
+
+        <div class="space-y-4">
+            <input type="password" id="passTutor" class="w-full bg-slate-900 border-2 border-slate-700 p-5 rounded-2xl outline-none focus:border-blue-500 text-center text-2xl tracking-[0.5em] font-bold transition-all" placeholder="••••">
+            <button onclick="entrar()" class="w-full bg-blue-500 hover:bg-blue-600 py-5 rounded-2xl font-black text-lg transition-all shadow-lg shadow-blue-900/40 uppercase tracking-widest">Iniciar Sala</button>
+        </div>
+    </div>
+
+    <div id="jitsiArea" class="hidden fixed inset-0 flex flex-col bg-black">
+        <header class="bg-slate-800 p-4 flex justify-between items-center border-b border-slate-700 shadow-xl z-50">
+            <div class="flex items-center gap-4">
+                <img src="logos.jpeg" class="w-8 h-8 rounded-full">
+                <span class="font-black text-xs uppercase tracking-widest flex items-center gap-2">
+                    <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span> Clase Activa
+                </span>
+            </div>
+            <button onclick="salir()" class="bg-red-500/20 text-red-500 px-6 py-2 rounded-xl text-[10px] font-black hover:bg-red-500 hover:text-white transition-all tracking-tighter uppercase">Finalizar Sesión</button>
+        </header>
+        <div class="flex-grow">
+            <iframe src="https://meet.jit.si/TareasFlashPanama" allow="camera; microphone; fullscreen; display-capture; autoplay" class="w-full h-full border-0"></iframe>
+        </div>
+    </div>
+
+    <script>
+        function entrar() {
+            const pass = document.getElementById('passTutor').value;
+            // Contraseña de acceso:
+            if(pass === "flash2024") {
+                document.getElementById('loginArea').classList.add('scale-90', 'opacity-0');
+                setTimeout(() => {
+                    document.getElementById('loginArea').classList.add('hidden');
+                    document.getElementById('jitsiArea').classList.remove('hidden');
+                }, 300);
+            } else {
+                alert("Contraseña Incorrecta.");
+                document.getElementById('passTutor').value = "";
+            }
+        }
+
+        function salir() {
+            if(confirm("¿Quieres cerrar la sesión del tutor?")) {
+                location.reload();
+            }
+        }
+
+        // Permitir entrar con la tecla Enter
+        document.getElementById('passTutor').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') entrar();
+        });
+    </script>
+</body>
+</html>
