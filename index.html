@@ -11,8 +11,6 @@
         .bg-flash-blue { background-color: var(--flash-blue); }
         .text-flash-blue { color: var(--flash-blue); }
         .text-flash-yellow { color: var(--flash-yellow); }
-        .img-placeholder { background-color: #e2e8f0; position: relative; overflow: hidden; }
-        .header-logo { width: 48px; height: 48px; object-fit: cover; border-radius: 50%; border: 2px solid var(--flash-yellow); }
         .btn-hover:hover { transform: translateY(-2px); box-shadow: 0 10px 20px -10px rgba(87, 182, 229, 0.6); }
         html { scroll-behavior: smooth; }
     </style>
@@ -22,9 +20,7 @@
     <nav class="bg-white/90 backdrop-blur-md shadow-sm sticky top-0 z-50">
         <div class="container mx-auto px-6 py-3 flex justify-between items-center">
             <div class="flex items-center space-x-3">
-                <div class="img-placeholder rounded-full">
-                    <img src="logos.jpeg" alt="Logo" class="header-logo" onerror="this.src='https://ui-avatars.com/api/?name=T+F&background=57b6e5&color=fff'">
-                </div>
+                <img src="logos.jpeg" alt="Logo" class="w-12 h-12 rounded-full border-2 border-flash-yellow" onerror="this.src='https://ui-avatars.com/api/?name=T+F&background=57b6e5&color=fff'">
                 <div class="leading-none">
                     <span class="text-xl font-black tracking-tighter text-flash-blue">TAREAS</span><br>
                     <span class="text-xl font-black tracking-tighter text-flash-yellow pl-4">FLASH</span>
@@ -32,78 +28,85 @@
             </div>
             <div class="hidden md:flex space-x-8 items-center font-bold text-xs uppercase tracking-widest">
                 <a href="#inicio" class="hover:text-flash-blue transition-colors">Inicio</a>
-                <a href="#conocenos" class="hover:text-flash-blue transition-colors">Nosotros</a>
-                <a href="#contacto" class="bg-flash-blue text-white px-6 py-2.5 rounded-full btn-hover transition-all">WhatsApp</a>
+                <a href="#contacto" class="bg-flash-blue text-white px-6 py-2.5 rounded-full btn-hover transition-all">Agendar</a>
             </div>
         </div>
     </nav>
 
-    <section id="inicio" class="relative py-16 md:py-24 bg-white overflow-hidden">
+    <section id="inicio" class="py-16 bg-white overflow-hidden">
         <div class="container mx-auto px-6 flex flex-col md:flex-row items-center">
-            <div class="md:w-1/2 text-center md:text-left z-10">
-                <span class="inline-block bg-blue-50 text-flash-blue px-4 py-1 rounded-full text-xs font-bold uppercase mb-6">Tutorías 1 a 1 en Panamá</span>
-                <h1 class="text-5xl md:text-7xl font-black text-slate-900 leading-[1.1] mb-6">
-                    Aprende más <br> <span class="text-flash-blue">rápido</span>, vive más <br> <span class="text-flash-yellow">tranquilo.</span>
+            <div class="md:w-1/2 text-center md:text-left">
+                <h1 class="text-5xl md:text-7xl font-black text-slate-900 leading-tight mb-6">
+                    Aprende <span class="text-flash-blue">rápido</span>,<br>vive <span class="text-flash-yellow">tranquilo.</span>
                 </h1>
-                <p class="text-lg text-slate-500 mb-10 max-w-lg leading-relaxed">Refuerzo escolar de alta calidad en Panamá.</p>
-                <div class="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
-                    <a href="#contacto" class="bg-flash-blue text-white px-10 py-4 rounded-2xl font-black text-lg btn-hover transition-all text-center">Reserva Clase</a>
-                </div>
+                <p class="text-lg text-slate-500 mb-8">Refuerzo escolar de alta calidad en Panamá.</p>
+                <a href="#contacto" class="bg-flash-blue text-white px-10 py-4 rounded-2xl font-black btn-hover inline-block">Reserva Clase</a>
             </div>
-            <div class="md:w-1/2 mt-16 md:mt-0 flex justify-center">
-                <img src="logos.jpeg" class="w-64 h-64 md:w-96 md:h-96 rounded-full border-[10px] border-white shadow-2xl" onerror="this.src='https://placehold.co/400x400/57b6e5/ffffff?text=TF'">
+            <div class="md:w-1/2 mt-12 md:mt-0 flex justify-center">
+                <img src="logos.jpeg" class="w-64 h-64 md:w-80 md:h-80 rounded-full border-[10px] border-white shadow-2xl">
             </div>
         </div>
     </section>
 
-    <section id="contacto" class="py-24">
+    <section id="contacto" class="py-20 bg-slate-100">
         <div class="container mx-auto px-6">
-            <div class="max-w-5xl mx-auto bg-white rounded-[3rem] shadow-2xl overflow-hidden flex border border-slate-100">
+            <div class="max-w-6xl mx-auto bg-white rounded-[3rem] shadow-2xl overflow-hidden flex flex-col md:flex-row min-h-[600px]">
                 
-                <div class="hidden md:flex md:w-2/5 bg-slate-900 p-12 text-white flex-col justify-center">
-                    <h2 class="text-4xl font-black mb-8 leading-tight">Solicita tu cupo hoy</h2>
-                    <p class="text-slate-400 mb-10">Un coordinador te contactará para asignar al tutor ideal.</p>
-                    <div class="space-y-6">
-                        <div class="flex items-center space-x-4">
-                            <div class="w-10 h-10 bg-flash-blue/20 rounded-full flex items-center justify-center text-flash-blue"><i class="fab fa-whatsapp"></i></div>
-                            <span class="text-sm font-bold">Atención vía WhatsApp</span>
+                <div class="hidden md:flex md:w-2/5 bg-slate-900 p-8 text-white flex-col">
+                    <div id="loginPanel" class="my-auto">
+                        <div class="w-16 h-16 bg-flash-blue/20 rounded-2xl flex items-center justify-center text-flash-blue text-3xl mb-6">
+                            <i class="fas fa-user-tie"></i>
                         </div>
-                        <div class="flex items-center space-x-4">
-                            <div class="w-10 h-10 bg-flash-yellow/20 rounded-full flex items-center justify-center text-flash-yellow"><i class="fas fa-clock"></i></div>
-                            <span class="text-sm font-bold">Lunes a Sábado: 8am - 7pm</span>
+                        <h2 class="text-2xl font-black mb-4">Panel del Tutor</h2>
+                        <p class="text-slate-400 mb-6 text-sm">Ingresa la clave para acceder a la sala de Jitsi Meet.</p>
+                        <input type="password" id="passTutor" class="w-full bg-slate-800 border border-slate-700 p-3 rounded-xl mb-4 outline-none focus:border-flash-blue" placeholder="Contraseña">
+                        <button onclick="checkAccess()" class="w-full bg-flash-blue py-3 rounded-xl font-bold hover:bg-blue-400 transition-all">Entrar a Clase</button>
+                    </div>
+
+                    <div id="jitsiPanel" class="hidden h-full flex flex-col">
+                        <div class="flex justify-between items-center mb-4">
+                            <span class="text-green-400 font-bold flex items-center gap-2 text-xs">
+                                <span class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span> SALA ACTIVA
+                            </span>
+                            <button onclick="logout()" class="text-[10px] text-slate-400 hover:text-white underline">SALIR</button>
+                        </div>
+                        <div class="flex-grow rounded-2xl overflow-hidden bg-black border border-slate-700">
+                            <iframe src="https://meet.jit.si/TareasFlashPanama" allow="camera; microphone; fullscreen; display-capture; autoplay" class="w-full h-full border-0"></iframe>
                         </div>
                     </div>
                 </div>
 
                 <div class="w-full md:w-3/5 p-10 md:p-16">
-                    <form id="tutoriaForm" class="grid grid-cols-1 gap-6">
-                        <div class="grid md:grid-cols-2 gap-6">
-                            <div class="space-y-2">
-                                <label class="text-[10px] font-black uppercase tracking-widest text-slate-400">Nombre Estudiante</label>
-                                <input type="text" id="nombre" class="w-full bg-slate-50 border-2 border-transparent p-4 rounded-2xl focus:border-flash-blue outline-none" required>
+                    <h2 class="text-3xl font-black mb-8">Solicita tu Cupo</h2>
+                    <form id="tutoriaForm" class="flex flex-col gap-5">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                            <div class="space-y-1">
+                                <label class="text-[10px] font-bold text-slate-400 uppercase">Estudiante</label>
+                                <input type="text" id="nombre" class="w-full bg-slate-50 p-4 rounded-xl outline-none focus:ring-2 focus:ring-flash-blue" required>
                             </div>
-                            <div class="space-y-2">
-                                <label class="text-[10px] font-black uppercase tracking-widest text-slate-400">WhatsApp Acudiente</label>
-                                <input type="tel" id="telefono" class="w-full bg-slate-50 border-2 border-transparent p-4 rounded-2xl focus:border-flash-blue outline-none" placeholder="6000-0000" required>
-                            </div>
-                        </div>
-                        <div class="grid md:grid-cols-2 gap-6">
-                            <div class="space-y-2">
-                                <label class="text-[10px] font-black uppercase tracking-widest text-slate-400">Grado Escolar</label>
-                                <input type="text" id="grado" class="w-full bg-slate-50 border-2 border-transparent p-4 rounded-2xl focus:border-flash-blue outline-none" required>
-                            </div>
-                            <div class="space-y-2">
-                                <label class="text-[10px] font-black uppercase tracking-widest text-slate-400">Materia</label>
-                                <input type="text" id="materia" class="w-full bg-slate-50 border-2 border-transparent p-4 rounded-2xl focus:border-flash-blue outline-none" required>
+                            <div class="space-y-1">
+                                <label class="text-[10px] font-bold text-slate-400 uppercase">WhatsApp</label>
+                                <input type="tel" id="telefono" class="w-full bg-slate-50 p-4 rounded-xl outline-none focus:ring-2 focus:ring-flash-blue" required>
                             </div>
                         </div>
-                        <div class="space-y-2">
-                            <label class="text-[10px] font-black uppercase tracking-widest text-slate-400">Cuéntanos más</label>
-                            <textarea id="descripcion" rows="2" class="w-full bg-slate-50 border-2 border-transparent p-4 rounded-2xl focus:border-flash-blue outline-none" placeholder="¿Qué temas necesita reforzar?"></textarea>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                            <div class="space-y-1">
+                                <label class="text-[10px] font-bold text-slate-400 uppercase">Grado</label>
+                                <input type="text" id="grado" class="w-full bg-slate-50 p-4 rounded-xl outline-none focus:ring-2 focus:ring-flash-blue" required>
+                            </div>
+                            <div class="space-y-1">
+                                <label class="text-[10px] font-bold text-slate-400 uppercase">Materia</label>
+                                <input type="text" id="materia" class="w-full bg-slate-50 p-4 rounded-xl outline-none focus:ring-2 focus:ring-flash-blue" required>
+                            </div>
                         </div>
-                        <button type="submit" class="w-full bg-green-500 text-white font-black py-5 rounded-2xl hover:bg-green-600 transition-all flex items-center justify-center space-x-3 shadow-xl">
+                        <div class="space-y-1">
+                            <label class="text-[10px] font-bold text-slate-400 uppercase">Descripción</label>
+                            <textarea id="descripcion" rows="3" placeholder="¿En qué podemos ayudarte?" class="w-full bg-slate-50 p-4 rounded-xl outline-none focus:ring-2 focus:ring-flash-blue"></textarea>
+                        </div>
+                        
+                        <button type="submit" class="w-full bg-green-500 text-white font-black py-5 rounded-2xl hover:bg-green-600 transition-all flex items-center justify-center gap-3 shadow-lg mt-2">
                             <i class="fab fa-whatsapp text-2xl"></i>
-                            <span class="text-lg">AGENDAR TUTORÍA FLASH</span>
+                            AGENDAR POR WHATSAPP
                         </button>
                     </form>
                 </div>
@@ -112,24 +115,49 @@
     </section>
 
     <script>
+        // Lógica de Acceso al Panel Jitsi
+        function checkAccess() {
+            const pass = document.getElementById('passTutor').value;
+            // Clave de acceso
+            if(pass === "flash2024") { 
+                document.getElementById('loginPanel').classList.add('hidden');
+                document.getElementById('jitsiPanel').classList.remove('hidden');
+            } else {
+                alert("Clave incorrecta");
+            }
+        }
+
+        function logout() {
+            document.getElementById('jitsiPanel').classList.add('hidden');
+            document.getElementById('loginPanel').classList.remove('hidden');
+            document.getElementById('passTutor').value = "";
+        }
+
+        // Lógica del Formulario
         document.getElementById('tutoriaForm').addEventListener('submit', function(e) {
             e.preventDefault();
-            const miWhatsApp = "50760000000"; 
+            
+            const miWhatsApp = "50760000000"; // Reemplaza con tu número
+            
             const nombre = document.getElementById('nombre').value;
             const grado = document.getElementById('grado').value;
             const materia = document.getElementById('materia').value;
-            const telefono = document.getElementById('telefono').value;
+            const tel = document.getElementById('telefono').value;
             const desc = document.getElementById('descripcion').value;
 
-            const mensaje = `⚡ *NUEVA SOLICITUD* ⚡\n\n` +
+            // Construcción del mensaje (Asegurando la descripción)
+            const mensaje = `⚡ *NUEVA SOLICITUD TAREAS FLASH* ⚡\n\n` +
                             `*Estudiante:* ${nombre}\n` +
                             `*Grado:* ${grado}\n` +
                             `*Materia:* ${materia}\n` +
-                            `*Contacto:* ${telefono}\n` +
-                            `*Notas:* ${desc.trim() !== "" ? desc : 'Sin comentarios.'}`;
+                            `*Contacto:* ${tel}\n` +
+                            `*Notas:* ${desc.trim() !== "" ? desc : 'Sin notas adicionales.'}`;
 
+            // Abrir WhatsApp en pestaña nueva
             window.open(`https://wa.me/${miWhatsApp}?text=${encodeURIComponent(mensaje)}`, '_blank');
-            this.reset(); // Limpia el formulario
+            
+            // LIMPIEZA del formulario
+            this.reset();
         });
     </script>
 </body>
