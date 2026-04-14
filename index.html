@@ -30,11 +30,6 @@
             box-shadow: 0 10px 20px -10px rgba(87, 182, 229, 0.6);
         }
 
-        /* Ajustes para tipografía en pantallas pequeñas */
-        @media (max-width: 640px) {
-            .mobile-title { font-size: 2.75rem !important; }
-        }
-
         html { scroll-behavior: smooth; }
     </style>
 </head>
@@ -52,27 +47,29 @@
                 </div>
             </div>
             
-            <div class="flex space-x-8 items-center font-bold text-xs uppercase tracking-widest">
-                <a href="#inicio" class="hidden md:block hover:text-flash-blue transition-colors">Inicio</a>
+            <div class="hidden md:flex space-x-8 items-center font-bold text-xs uppercase tracking-widest">
+                <a href="#inicio" class="hover:text-flash-blue transition-colors">Inicio</a>
+                <a href="#conocenos" class="hover:text-flash-blue transition-colors">Nosotros</a>
                 <a href="#contacto" class="bg-flash-blue text-white px-6 py-2.5 rounded-full btn-hover transition-all">WhatsApp</a>
             </div>
         </div>
     </nav>
 
-    <section id="inicio" class="relative py-12 md:py-24 bg-white overflow-hidden">
+    <section id="inicio" class="relative py-16 md:py-24 bg-white overflow-hidden">
         <div class="container mx-auto px-6 flex flex-col md:flex-row items-center">
             <div class="md:w-1/2 text-center md:text-left z-10">
                 <span class="inline-block bg-blue-50 text-flash-blue px-4 py-1 rounded-full text-xs font-bold uppercase mb-6">Tutorías 1 a 1 en Panamá</span>
-                <h1 class="mobile-title text-5xl md:text-7xl font-black text-slate-900 leading-[1.1] mb-6">
+                <h1 class="text-5xl md:text-7xl font-black text-slate-900 leading-[1.1] mb-6">
                     Aprende más <br> <span class="text-flash-blue">rápido</span>, vive más <br> <span class="text-flash-yellow">tranquilo.</span>
                 </h1>
-                <p class="text-lg text-slate-500 mb-10 max-w-lg leading-relaxed mx-auto md:mx-0">Refuerzo escolar de alta calidad. Ayudamos a estudiantes a superar sus retos académicos con rapidez y confianza.</p>
+                <p class="text-lg text-slate-500 mb-10 max-w-lg leading-relaxed">Refuerzo escolar de alta calidad. Ayudamos a estudiantes a superar sus retos académicos con rapidez y confianza.</p>
                 <div class="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
                     <a href="#contacto" class="bg-flash-blue text-white px-10 py-4 rounded-2xl font-black text-lg btn-hover transition-all text-center">Reserva Clase</a>
+                    <a href="#conocenos" class="border-2 border-slate-200 px-10 py-4 rounded-2xl font-bold text-lg hover:bg-slate-100 transition-all text-center">Ver Servicios</a>
                 </div>
             </div>
             
-            <div class="md:w-1/2 mt-12 md:mt-0 flex justify-center relative">
+            <div class="md:w-1/2 mt-16 md:mt-0 flex justify-center relative">
                 <div class="absolute -inset-10 bg-flash-yellow/10 rounded-full blur-3xl"></div>
                 <div class="relative w-64 h-64 md:w-96 md:h-96">
                     <img src="logos.jpeg" alt="Tareas Flash Hero" class="w-full h-full object-cover rounded-full border-[10px] border-white shadow-2xl" onerror="this.src='https://placehold.co/400x400/57b6e5/ffffff?text=Tareas+Flash'">
@@ -81,7 +78,7 @@
         </div>
     </section>
 
-    <section id="conocenos" class="py-16 md:py-24 bg-slate-100">
+    <section id="conocenos" class="py-24 bg-slate-100">
         <div class="container mx-auto px-6">
             <div class="text-center max-w-2xl mx-auto mb-16">
                 <h2 class="text-3xl md:text-4xl font-black mb-4 uppercase tracking-tight">¿Por qué Tareas Flash?</h2>
@@ -107,11 +104,10 @@
         </div>
     </section>
 
-    <section id="contacto" class="py-16 md:py-24">
+    <section id="contacto" class="py-24">
         <div class="container mx-auto px-6">
             <div class="max-w-5xl mx-auto bg-white rounded-[3rem] shadow-2xl overflow-hidden flex flex-col md:flex-row border border-slate-100">
-                
-                <div class="hidden md:flex md:w-2/5 bg-slate-900 p-12 text-white flex-col">
+                <div class="hidden md:block md:w-2/5 bg-slate-900 p-12 text-white">
                     <h2 class="text-4xl font-black mb-8 leading-tight">Solicita tu cupo hoy</h2>
                     <p class="text-slate-400 mb-10">Déjanos los datos del estudiante y un coordinador te contactará para asignar al tutor ideal.</p>
                     <div class="space-y-6">
@@ -125,13 +121,8 @@
                         </div>
                     </div>
                 </div>
-
+                
                 <div class="w-full md:w-3/5 p-10 md:p-16">
-                    <div class="md:hidden text-center mb-8">
-                        <h2 class="text-3xl font-black">Reserva tu Cupo</h2>
-                        <p class="text-slate-500">Recibe atención inmediata por WhatsApp</p>
-                    </div>
-
                     <form id="tutoriaForm" class="grid grid-cols-1 gap-6">
                         <div class="grid md:grid-cols-2 gap-6">
                             <div class="space-y-2">
@@ -168,10 +159,10 @@
     </section>
 
     <footer class="bg-slate-900 text-white pt-20 pb-10">
-        <div class="container mx-auto px-6 text-center md:text-left">
-            <div class="flex flex-col md:flex-row justify-between items-center mb-16 space-y-8 md:space-y-0">
+        <div class="container mx-auto px-6">
+            <div class="flex flex-col md:flex-row justify-between items-center mb-16 space-y-8 md:space-y-0 text-center md:text-left">
                 <div class="flex items-center space-x-4">
-                    <img src="logos.jpeg" alt="Logo" class="w-12 h-12 rounded-full border-2 border-flash-yellow">
+                    <img src="logos.jpeg" alt="Logo" class="w-12 h-12 rounded-full border-2 border-flash-yellow" onerror="this.style.display='none'">
                     <span class="text-3xl font-black tracking-tighter italic">TAREAS <span class="text-flash-yellow">FLASH</span></span>
                 </div>
                 <div class="flex space-x-8 font-bold text-xs uppercase tracking-[0.2em] text-slate-400">
@@ -181,7 +172,7 @@
                 </div>
             </div>
             <div class="text-center pt-8 border-t border-slate-800">
-                <p class="text-slate-500 text-[10px] uppercase tracking-[0.3em] font-bold">&copy; 2026 Tareas Flash — Panamá.</p>
+                <p class="text-slate-500 text-[10px] uppercase tracking-[0.3em] font-bold">&copy; 2026 Tareas Flash — Panamá. Transformando el estudio.</p>
             </div>
         </div>
     </footer>
@@ -189,22 +180,31 @@
     <script>
         document.getElementById('tutoriaForm').addEventListener('submit', function(e) {
             e.preventDefault();
+            
+            // --- NÚMERO DE WHATSAPP ---
             const miWhatsApp = "50760000000"; 
+
             const nombre = document.getElementById('nombre').value;
             const grado = document.getElementById('grado').value;
             const materia = document.getElementById('materia').value;
             const telefono = document.getElementById('telefono').value;
             const desc = document.getElementById('descripcion').value;
 
+            // Construcción del mensaje asegurando la descripción
             const mensaje = `⚡ *NUEVA SOLICITUD TAREAS FLASH* ⚡\n\n` +
                             `*Estudiante:* ${nombre}\n` +
                             `*Grado:* ${grado}\n` +
                             `*Materia:* ${materia}\n` +
                             `*Contacto:* ${telefono}\n` +
-                            `*Notas:* ${desc || 'Sin comentarios adicionales.'}`;
+                            `*Notas:* ${desc.trim() !== "" ? desc : 'Sin comentarios adicionales.'}`;
 
             const url = `https://wa.me/${miWhatsApp}?text=${encodeURIComponent(mensaje)}`;
+            
+            // Abrir WhatsApp
             window.open(url, '_blank');
+
+            // Limpiar el formulario inmediatamente
+            this.reset();
         });
     </script>
 </body>
