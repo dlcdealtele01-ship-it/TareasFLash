@@ -3,71 +3,98 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panel Tutor | Tareas Flash</title>
+    <title>Tareas Flash | Tutorías en Panamá</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --flash-blue: #57b6e5;
+            --flash-yellow: #f9b233;
+        }
+        .bg-flash-blue { background-color: var(--flash-blue); }
+        .text-flash-blue { color: var(--flash-blue); }
+        .text-flash-yellow { color: var(--flash-yellow); }
+        
+        .img-placeholder { background-color: #e2e8f0; position: relative; overflow: hidden; }
+        
+        .header-logo {
+            width: 48px;
+            height: 48px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 2px solid var(--flash-yellow);
+        }
+
+        .btn-hover:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px -10px rgba(87, 182, 229, 0.6);
+        }
+
+        html { scroll-behavior: smooth; }
+    </style>
 </head>
-<body class="bg-slate-900 text-white font-sans min-h-screen flex items-center justify-center overflow-hidden">
+<body class="bg-slate-50 font-sans text-slate-900">
 
-    <!-- Panel de login: visible solo en pantallas medianas hacia arriba -->
-    <div id="loginArea" class="hidden sm:block w-full max-w-md p-10 bg-slate-800 rounded-[3rem] shadow-2xl border border-slate-700 mx-4 transition-all duration-500">
-        <div class="text-center mb-8">
-            <img src="logos.jpeg" class="w-24 h-24 rounded-full mx-auto mb-6 border-4 border-amber-400 shadow-xl">
-            <h1 class="text-3xl font-black italic tracking-tighter">PANEL <span class="text-amber-400">TUTOR</span></h1>
-            <p class="text-slate-400 text-xs mt-3 uppercase tracking-widest font-bold">Acceso Administrativo</p>
-        </div>
-
-        <div class="space-y-4">
-            <input type="password" id="passTutor" class="w-full bg-slate-900 border-2 border-slate-700 p-5 rounded-2xl outline-none focus:border-blue-500 text-center text-2xl tracking-[0.5em] font-bold transition-all" placeholder="••••">
-            <button onclick="entrar()" class="w-full bg-blue-500 hover:bg-blue-600 py-5 rounded-2xl font-black text-lg transition-all shadow-lg shadow-blue-900/40 uppercase tracking-widest">Iniciar Sala</button>
-        </div>
-    </div>
-
-    <!-- Sala Jitsi: visible directamente en móviles -->
-    <div id="jitsiArea" class="block sm:hidden fixed inset-0 flex flex-col bg-black">
-        <header class="bg-slate-800 p-4 flex justify-between items-center border-b border-slate-700 shadow-xl z-50">
-            <div class="flex items-center gap-4">
-                <img src="logos.jpeg" class="w-8 h-8 rounded-full">
-                <span class="font-black text-xs uppercase tracking-widest flex items-center gap-2">
-                    <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span> Clase Activa
-                </span>
+<nav class="bg-white/90 backdrop-blur-md shadow-sm sticky top-0 z-50">
+    <div class="container mx-auto px-6 py-3 flex justify-between items-center">
+        <div class="flex items-center space-x-3">
+            <div class="img-placeholder rounded-full">
+                <img src="logos.jpeg" class="header-logo">
             </div>
-            <button onclick="salir()" class="bg-red-500/20 text-red-500 px-6 py-2 rounded-xl text-[10px] font-black hover:bg-red-500 hover:text-white transition-all tracking-tighter uppercase">Finalizar Sesión</button>
-        </header>
-        <div class="flex-grow">
-            <iframe src="https://meet.jit.si/TareasFlashPanama" allow="camera; microphone; fullscreen; display-capture; autoplay" class="w-full h-full border-0"></iframe>
+            <div class="leading-none">
+                <span class="text-xl font-black text-flash-blue">TAREAS</span><br>
+                <span class="text-xl font-black text-flash-yellow pl-4">FLASH</span>
+            </div>
         </div>
     </div>
+</nav>
 
-    <script>
-        function entrar() {
-            const pass = document.getElementById('passTutor').value;
-            // Contraseña de acceso:
-            if(pass === "flash2024") {
-                document.getElementById('loginArea').classList.add('scale-90', 'opacity-0');
-                setTimeout(() => {
-                    document.getElementById('loginArea').classList.add('hidden');
-                    document.getElementById('jitsiArea').classList.remove('hidden');
-                }, 300);
-            } else {
-                alert("Contraseña Incorrecta.");
-                document.getElementById('passTutor').value = "";
-            }
-        }
+<section id="contacto" class="py-24">
+    <div class="container mx-auto px-6">
+        <div class="max-w-5xl mx-auto bg-white rounded-[3rem] shadow-2xl overflow-hidden flex flex-col md:flex-row border">
 
-        function salir() {
-            if(confirm("¿Quieres cerrar la sesión del tutor?")) {
-                location.reload();
-            }
-        }
+            <!-- PANEL (oculto en móvil) -->
+            <div class="hidden md:block md:w-2/5 bg-slate-900 p-12 text-white">
+                <h2 class="text-4xl font-black mb-8">Solicita tu cupo hoy</h2>
+                <p class="text-slate-400 mb-10">Déjanos los datos del estudiante.</p>
+            </div>
 
-        // Permitir entrar con la tecla Enter
-        const passInput = document.getElementById('passTutor');
-        if(passInput){
-            passInput.addEventListener('keypress', function (e) {
-                if (e.key === 'Enter') entrar();
-            });
-        }
-    </script>
+            <!-- FORM -->
+            <div class="w-full md:w-3/5 p-10 md:p-16">
+                <form id="tutoriaForm" class="grid gap-6">
+                    
+                    <input type="text" id="nombre" placeholder="Nombre" class="p-4 bg-slate-100 rounded-xl" required>
+                    <input type="tel" id="telefono" placeholder="WhatsApp" class="p-4 bg-slate-100 rounded-xl" required>
+                    <input type="text" id="grado" placeholder="Grado" class="p-4 bg-slate-100 rounded-xl" required>
+                    <input type="text" id="materia" placeholder="Materia" class="p-4 bg-slate-100 rounded-xl" required>
+
+                    <button class="bg-green-500 text-white py-4 rounded-xl">
+                        Enviar a WhatsApp
+                    </button>
+
+                </form>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<script>
+document.getElementById('tutoriaForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    const numero = "50760000000";
+
+    const nombre = document.getElementById('nombre').value;
+    const telefono = document.getElementById('telefono').value;
+    const grado = document.getElementById('grado').value;
+    const materia = document.getElementById('materia').value;
+
+    const mensaje = `Nueva solicitud:\n${nombre}\n${grado}\n${materia}\n${telefono}`;
+
+    window.open(`https://wa.me/${numero}?text=${encodeURIComponent(mensaje)}`);
+});
+</script>
+
 </body>
 </html>
