@@ -25,8 +25,9 @@
         #jaas-container { height: 600px; width: 100%; border-radius: 2rem; overflow: hidden; }
     </style>
 </head>
-<body class="bg-slate-50 font-sans text-slate-900">
+<body class="bg-slate-50 font-sans text-slate-900 flex flex-col min-h-screen">
 
+    <!-- ================= NAVBAR ================= -->
     <nav class="bg-white/90 backdrop-blur-md shadow-sm sticky top-0 z-50">
         <div class="container mx-auto px-6 py-3 flex justify-between items-center">
             <div class="flex items-center space-x-3 cursor-pointer" onclick="mostrarHome()">
@@ -46,138 +47,175 @@
         </div>
     </nav>
 
-    <main id="vista-home">
-        <section id="inicio" class="relative py-16 md:py-24 bg-white overflow-hidden">
-            <div class="container mx-auto px-6 flex flex-col md:flex-row items-center">
-                <div class="md:w-1/2 text-center md:text-left z-10">
-                    <span class="inline-block bg-blue-50 text-flash-blue px-4 py-1 rounded-full text-xs font-bold uppercase mb-6">Tutorías 1 a 1 en Panamá</span>
-                    <h1 class="text-5xl md:text-7xl font-black text-slate-900 leading-[1.1] mb-6">
-                        Aprende más <br> <span class="text-flash-blue">rápido</span>, vive más <br> <span class="text-flash-yellow">tranquilo.</span>
-                    </h1>
-                    <p class="text-lg text-slate-500 mb-10 max-w-lg leading-relaxed">Refuerzo escolar de alta calidad. Ayudamos a estudiantes a superar sus retos académicos con rapidez y confianza.</p>
-                </div>
-                <div class="md:w-1/2 mt-16 md:mt-0 flex justify-center relative">
-                    <img src="logos.jpeg" class="w-64 h-64 md:w-96 md:h-96 object-cover rounded-full border-[10px] border-white shadow-2xl" onerror="this.src='https://placehold.co/400x400/57b6e5/ffffff?text=Tareas+Flash'">
-                </div>
-            </div>
-        </section>
-
-        <!-- ================= NUEVA SECCIÓN DE SERVICIOS ================= -->
-        <section id="servicios" class="py-20 bg-slate-50">
-            <div class="container mx-auto px-6">
-                <div class="text-center max-w-3xl mx-auto mb-16">
-                    <span class="inline-block bg-amber-50 text-flash-yellow px-4 py-1 rounded-full text-xs font-bold uppercase mb-4">¿Qué hacemos?</span>
-                    <h2 class="text-4xl md:text-5xl font-black text-slate-900 tracking-tight">
-                        Elaboramos todo tipo de trabajos
-                    </h2>
-                    <p class="text-lg text-slate-500 mt-4">
-                        Desde el más sencillo al más complejo. Nos encargamos de tus asignaciones con la mayor dedicación y calidad profesional.
-                    </p>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-8 max-w-6xl mx-auto">
-                    <!-- Tarjeta 1 -->
-                    <div class="bg-white p-8 rounded-3xl shadow-md border border-slate-100 hover:shadow-xl transition-all duration-300">
-                        <div class="w-12 h-12 bg-flash-blue/10 rounded-2xl flex items-center justify-center text-flash-blue text-xl mb-6">
-                            <i class="fas fa-desktop"></i>
-                        </div>
-                        <h3 class="text-xl font-bold mb-2">Presentaciones</h3>
-                        <p class="text-slate-500 text-sm leading-relaxed">Diapositivas dinámicas, visuales y profesionales listas para exponer.</p>
+    <!-- ================= CONTENIDO PRINCIPAL ================= -->
+    <main class="flex-grow">
+        <div id="vista-home">
+            <!-- Sección Inicio -->
+            <section id="inicio" class="relative py-16 md:py-24 bg-white overflow-hidden">
+                <div class="container mx-auto px-6 flex flex-col md:flex-row items-center">
+                    <div class="md:w-1/2 text-center md:text-left z-10">
+                        <span class="inline-block bg-blue-50 text-flash-blue px-4 py-1 rounded-full text-xs font-bold uppercase mb-6">Tutorías 1 a 1 en Panamá</span>
+                        <h1 class="text-5xl md:text-7xl font-black text-slate-900 leading-[1.1] mb-6">
+                            Aprende más <br> <span class="text-flash-blue">rápido</span>, vive más <br> <span class="text-flash-yellow">tranquilo.</span>
+                        </h1>
+                        <p class="text-lg text-slate-500 mb-10 max-w-lg leading-relaxed">Refuerzo escolar de alta calidad. Ayudamos a estudiantes a superar sus retos académicos con rapidez y confianza.</p>
                     </div>
-
-                    <!-- Tarjeta 2 -->
-                    <div class="bg-white p-8 rounded-3xl shadow-md border border-slate-100 hover:shadow-xl transition-all duration-300">
-                        <div class="w-12 h-12 bg-flash-yellow/10 rounded-2xl flex items-center justify-center text-flash-yellow text-xl mb-6">
-                            <i class="fas fa-search"></i>
-                        </div>
-                        <h3 class="text-xl font-bold mb-2">Investigaciones</h3>
-                        <p class="text-slate-500 text-sm leading-relaxed">Proyectos estructurados, con fuentes confiables y redacción impecable.</p>
-                    </div>
-
-                    <!-- Tarjeta 3 -->
-                    <div class="bg-white p-8 rounded-3xl shadow-md border border-slate-100 hover:shadow-xl transition-all duration-300">
-                        <div class="w-12 h-12 bg-flash-blue/10 rounded-2xl flex items-center justify-center text-flash-blue text-xl mb-6">
-                            <i class="fas fa-sitemap"></i>
-                        </div>
-                        <h3 class="text-xl font-bold mb-2">Cuadros Sinópticos</h3>
-                        <p class="text-slate-500 text-sm leading-relaxed">Esquemas, mapas conceptuales y diagramas claros para resumir cualquier tema.</p>
-                    </div>
-
-                    <!-- Tarjeta 4 -->
-                    <div class="bg-white p-8 rounded-3xl shadow-md border border-slate-100 hover:shadow-xl transition-all duration-300 bg-gradient-to-br from-white to-slate-50">
-                        <div class="w-12 h-12 bg-slate-900 text-white rounded-2xl flex items-center justify-center text-xl mb-6">
-                            <i class="fas fa-plus"></i>
-                        </div>
-                        <h3 class="text-xl font-bold mb-2">Y mucho más</h3>
-                        <p class="text-slate-500 text-sm leading-relaxed">Ensayos, talleres, cuestionarios y cualquier asignación escolar que necesites.</p>
+                    <div class="md:w-1/2 mt-16 md:mt-0 flex justify-center relative">
+                        <img src="logos.jpeg" class="w-64 h-64 md:w-96 md:h-96 object-cover rounded-full border-[10px] border-white shadow-2xl" onerror="this.src='https://placehold.co/400x400/57b6e5/ffffff?text=Tareas+Flash'">
                     </div>
                 </div>
-            </div>
-        </section>
-        <!-- ============================================================== -->
+            </section>
 
-        <section id="contacto" class="py-24">
-            <div class="container mx-auto px-6">
-                <div class="max-w-5xl mx-auto bg-white rounded-[3rem] shadow-2xl overflow-hidden flex flex-col md:flex-row border border-slate-100">
-                    <div class="md:w-2/5 bg-slate-900 p-12 text-white">
-                        <h2 class="text-4xl font-black mb-8 leading-tight">Solicita tu cupo hoy</h2>
-                        <p class="text-slate-400 mb-10">Elige el canal de envío que prefieras para que un coordinador te contacte.</p>
-                        <div class="space-y-6">
-                            <div class="flex items-center space-x-4">
-                                <div class="w-10 h-10 bg-flash-blue/20 rounded-full flex items-center justify-center text-flash-blue"><i class="fas fa-check"></i></div>
-                                <span class="text-sm font-bold">Atención Personalizada</span>
+            <!-- Sección Servicios -->
+            <section id="servicios" class="py-20 bg-slate-50">
+                <div class="container mx-auto px-6">
+                    <div class="text-center max-w-3xl mx-auto mb-16">
+                        <span class="inline-block bg-amber-50 text-flash-yellow px-4 py-1 rounded-full text-xs font-bold uppercase mb-4">¿Qué hacemos?</span>
+                        <h2 class="text-4xl md:text-5xl font-black text-slate-900 tracking-tight">
+                            Elaboramos todo tipo de trabajos
+                        </h2>
+                        <p class="text-lg text-slate-500 mt-4">
+                            Desde el más sencillo al más complejo. Nos encargamos de tus asignaciones con la mayor dedicación y calidad profesional.
+                        </p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-8 max-w-6xl mx-auto">
+                        <!-- Tarjeta 1 -->
+                        <div class="bg-white p-8 rounded-3xl shadow-md border border-slate-100 hover:shadow-xl transition-all duration-300">
+                            <div class="w-12 h-12 bg-flash-blue/10 rounded-2xl flex items-center justify-center text-flash-blue text-xl mb-6">
+                                <i class="fas fa-desktop"></i>
                             </div>
+                            <h3 class="text-xl font-bold mb-2">Presentaciones</h3>
+                            <p class="text-slate-500 text-sm leading-relaxed">Diapositivas dinámicas, visuales y profesionales listas para exponer.</p>
+                        </div>
+
+                        <!-- Tarjeta 2 -->
+                        <div class="bg-white p-8 rounded-3xl shadow-md border border-slate-100 hover:shadow-xl transition-all duration-300">
+                            <div class="w-12 h-12 bg-flash-yellow/10 rounded-2xl flex items-center justify-center text-flash-yellow text-xl mb-6">
+                                <i class="fas fa-search"></i>
+                            </div>
+                            <h3 class="text-xl font-bold mb-2">Investigaciones</h3>
+                            <p class="text-slate-500 text-sm leading-relaxed">Proyectos estructurados, con fuentes confiables y redacción impecable.</p>
+                        </div>
+
+                        <!-- Tarjeta 3 -->
+                        <div class="bg-white p-8 rounded-3xl shadow-md border border-slate-100 hover:shadow-xl transition-all duration-300">
+                            <div class="w-12 h-12 bg-flash-blue/10 rounded-2xl flex items-center justify-center text-flash-blue text-xl mb-6">
+                                <i class="fas fa-sitemap"></i>
+                            </div>
+                            <h3 class="text-xl font-bold mb-2">Cuadros Sinópticos</h3>
+                            <p class="text-slate-500 text-sm leading-relaxed">Esquemas, mapas conceptuales y diagramas claros para resumir cualquier tema.</p>
+                        </div>
+
+                        <!-- Tarjeta 4 -->
+                        <div class="bg-white p-8 rounded-3xl shadow-md border border-slate-100 hover:shadow-xl transition-all duration-300 bg-gradient-to-br from-white to-slate-50">
+                            <div class="w-12 h-12 bg-slate-900 text-white rounded-2xl flex items-center justify-center text-xl mb-6">
+                                <i class="fas fa-plus"></i>
+                            </div>
+                            <h3 class="text-xl font-bold mb-2">Y mucho más</h3>
+                            <p class="text-slate-500 text-sm leading-relaxed">Ensayos, talleres, cuestionarios y cualquier asignación escolar que necesites.</p>
                         </div>
                     </div>
-                    <div class="md:w-3/5 p-10 md:p-16">
-                        <form id="tutoriaForm" class="grid grid-cols-1 gap-6">
-                            <div class="grid md:grid-cols-2 gap-6">
-                                <input type="text" id="nombre" class="w-full bg-slate-50 p-4 rounded-2xl outline-none border-2 border-transparent focus:border-flash-blue transition-all" placeholder="Nombre Estudiante" required>
-                                <input type="tel" id="telefono" class="w-full bg-slate-50 p-4 rounded-2xl outline-none border-2 border-transparent focus:border-flash-blue transition-all" placeholder="WhatsApp Acudiente" required>
+                </div>
+            </section>
+
+            <!-- Sección Contacto -->
+            <section id="contacto" class="py-24 bg-white">
+                <div class="container mx-auto px-6">
+                    <div class="max-w-5xl mx-auto bg-white rounded-[3rem] shadow-2xl overflow-hidden flex flex-col md:flex-row border border-slate-100">
+                        <div class="md:w-2/5 bg-slate-900 p-12 text-white">
+                            <h2 class="text-4xl font-black mb-8 leading-tight">Solicita tu cupo hoy</h2>
+                            <p class="text-slate-400 mb-10">Elige el canal de envío que prefieras para que un coordinador te contacte.</p>
+                            <div class="space-y-6">
+                                <div class="flex items-center space-x-4">
+                                    <div class="w-10 h-10 bg-flash-blue/20 rounded-full flex items-center justify-center text-flash-blue"><i class="fas fa-check"></i></div>
+                                    <span class="text-sm font-bold">Atención Personalizada</span>
+                                </div>
                             </div>
-                            <div class="grid md:grid-cols-2 gap-6">
-                                <input type="text" id="grado" class="w-full bg-slate-50 p-4 rounded-2xl outline-none border-2 border-transparent focus:border-flash-blue transition-all" placeholder="Grado Escolar" required>
-                                <input type="text" id="materia" class="w-full bg-slate-50 p-4 rounded-2xl outline-none border-2 border-transparent focus:border-flash-blue transition-all" placeholder="Materia de Interés" required>
-                            </div>
-                            <textarea id="descripcion" rows="2" class="w-full bg-slate-50 p-4 rounded-2xl outline-none border-2 border-transparent focus:border-flash-blue transition-all" placeholder="¿Qué temas necesita reforzar? (Cuéntanos más)"></textarea>
-                            
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
-                                <button type="button" onclick="enviarWhatsApp()" class="bg-green-500 text-white font-black py-4 rounded-2xl hover:bg-green-600 transition-all flex items-center justify-center space-x-3 shadow-xl btn-hover">
-                                    <i class="fab fa-whatsapp text-xl"></i>
-                                    <span class="uppercase text-sm">Vía WhatsApp</span>
-                                </button>
-                                <button type="button" onclick="enviarEmail()" class="bg-slate-800 text-white font-black py-4 rounded-2xl hover:bg-slate-700 transition-all flex items-center justify-center space-x-3 shadow-xl btn-hover">
-                                    <i class="fas fa-envelope text-xl"></i>
-                                    <span class="uppercase text-sm">Vía Correo</span>
-                                </button>
-                            </div>
-                        </form>
+                        </div>
+                        <div class="md:w-3/5 p-10 md:p-16">
+                            <form id="tutoriaForm" class="grid grid-cols-1 gap-6">
+                                <div class="grid md:grid-cols-2 gap-6">
+                                    <input type="text" id="nombre" class="w-full bg-slate-50 p-4 rounded-2xl outline-none border-2 border-transparent focus:border-flash-blue transition-all" placeholder="Nombre Estudiante" required>
+                                    <input type="tel" id="telefono" class="w-full bg-slate-50 p-4 rounded-2xl outline-none border-2 border-transparent focus:border-flash-blue transition-all" placeholder="WhatsApp Acudiente" required>
+                                </div>
+                                <div class="grid md:grid-cols-2 gap-6">
+                                    <input type="text" id="grado" class="w-full bg-slate-50 p-4 rounded-2xl outline-none border-2 border-transparent focus:border-flash-blue transition-all" placeholder="Grado Escolar" required>
+                                    <input type="text" id="materia" class="w-full bg-slate-50 p-4 rounded-2xl outline-none border-2 border-transparent focus:border-flash-blue transition-all" placeholder="Materia de Interés" required>
+                                </div>
+                                <textarea id="descripcion" rows="2" class="w-full bg-slate-50 p-4 rounded-2xl outline-none border-2 border-transparent focus:border-flash-blue transition-all" placeholder="¿Qué temas necesita reforzar? (Cuéntanos más)"></textarea>
+                                
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
+                                    <button type="button" onclick="enviarWhatsApp()" class="bg-green-500 text-white font-black py-4 rounded-2xl hover:bg-green-600 transition-all flex items-center justify-center space-x-3 shadow-xl btn-hover">
+                                        <i class="fab fa-whatsapp text-xl"></i>
+                                        <span class="uppercase text-sm">Vía WhatsApp</span>
+                                    </button>
+                                    <button type="button" onclick="enviarEmail()" class="bg-slate-800 text-white font-black py-4 rounded-2xl hover:bg-slate-700 transition-all flex items-center justify-center space-x-3 shadow-xl btn-hover">
+                                        <i class="fas fa-envelope text-xl"></i>
+                                        <span class="uppercase text-sm">Vía Correo</span>
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
                     </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Vista Panel Tutor -->
+        <section id="vista-panel" class="py-20 bg-slate-100 min-h-screen">
+            <div class="container mx-auto px-6 text-center">
+                <div id="login-box" class="max-w-md mx-auto bg-white p-10 rounded-[2.5rem] shadow-xl border border-slate-200">
+                    <h2 class="text-3xl font-black mb-8 uppercase tracking-tighter">Panel <span class="text-flash-blue">Tutor</span></h2>
+                    <form id="loginFormDocente" class="space-y-6 text-left">
+                        <input type="text" id="user" class="w-full bg-slate-50 p-4 rounded-2xl outline-none" placeholder="Usuario" required>
+                        <input type="password" id="pass" class="w-full bg-slate-50 p-4 rounded-2xl outline-none" placeholder="Contraseña" required>
+                        <button type="submit" class="w-full bg-flash-blue text-white font-black py-4 rounded-2xl shadow-lg">ENTRAR</button>
+                    </form>
+                </div>
+                <div id="jitsi-area" class="hidden">
+                    <div class="flex justify-between items-center mb-6 text-left">
+                        <h2 class="text-3xl font-black italic">CLASE <span class="text-flash-yellow">EN VIVO</span></h2>
+                        <button onclick="cerrarClase()" class="bg-red-500 text-white px-6 py-2 rounded-xl font-bold uppercase text-xs">Terminar</button>
+                    </div>
+                    <div id="jaas-container" class="border-8 border-white shadow-2xl"></div>
                 </div>
             </div>
         </section>
     </main>
 
-    <section id="vista-panel" class="py-20 bg-slate-100 min-h-screen">
-        <div class="container mx-auto px-6 text-center">
-            <div id="login-box" class="max-w-md mx-auto bg-white p-10 rounded-[2.5rem] shadow-xl border border-slate-200">
-                <h2 class="text-3xl font-black mb-8 uppercase tracking-tighter">Panel <span class="text-flash-blue">Tutor</span></h2>
-                <form id="loginFormDocente" class="space-y-6 text-left">
-                    <input type="text" id="user" class="w-full bg-slate-50 p-4 rounded-2xl outline-none" placeholder="Usuario" required>
-                    <input type="password" id="pass" class="w-full bg-slate-50 p-4 rounded-2xl outline-none" placeholder="Contraseña" required>
-                    <button type="submit" class="w-full bg-flash-blue text-white font-black py-4 rounded-2xl shadow-lg">ENTRAR</button>
-                </form>
-            </div>
-            <div id="jitsi-area" class="hidden">
-                <div class="flex justify-between items-center mb-6 text-left">
-                    <h2 class="text-3xl font-black italic">CLASE <span class="text-flash-yellow">EN VIVO</span></h2>
-                    <button onclick="cerrarClase()" class="bg-red-500 text-white px-6 py-2 rounded-xl font-bold uppercase text-xs">Terminar</button>
+    <!-- ================= FOOTER ================= -->
+    <footer class="bg-white shadow-[0_-1px_3px_0_rgba(0,0,0,0.05)] border-t border-slate-100">
+        <div class="container mx-auto px-6 py-8">
+            <div class="flex flex-col md:flex-row justify-between items-center space-y-6 md:space-y-0">
+                <!-- Logo Izquierda -->
+                <div class="flex items-center space-x-3 cursor-pointer" onclick="mostrarHome()">
+                    <img src="logos.jpeg" alt="Logo" class="header-logo" onerror="this.src='https://ui-avatars.com/api/?name=T+F&background=57b6e5&color=fff'">
+                    <div class="leading-none">
+                        <span class="text-xl font-black tracking-tighter text-flash-blue">TAREAS</span><br>
+                        <span class="text-xl font-black tracking-tighter text-flash-yellow pl-4">FLASH</span>
+                    </div>
                 </div>
-                <div id="jaas-container" class="border-8 border-white shadow-2xl"></div>
+
+                <!-- Enlaces del Medio -->
+                <div class="flex space-x-8 items-center font-bold text-xs uppercase tracking-widest">
+                    <a href="#inicio" onclick="mostrarHome()" class="hover:text-flash-blue transition-colors">Inicio</a>
+                    <a href="#servicios" onclick="mostrarHome()" class="hover:text-flash-blue transition-colors">Servicios</a>
+                    <a href="javascript:void(0)" onclick="mostrarPanel()" class="hover:text-flash-blue transition-colors">Panel Tutor</a>
+                </div>
+            </div>
+
+            <!-- Separador y Firma -->
+            <div class="mt-8 pt-6 border-t border-slate-100 flex flex-col sm:flex-row justify-between items-center text-xs text-slate-400 font-medium">
+                <p>&copy; 2026 Tareas Flash. Todos los derechos reservados.</p>
+                <p class="mt-2 sm:mt-0 tracking-wide">
+                    Developed with ❤️ by <a href="https://gierelaxel.dev" target="_blank" class="font-bold text-slate-700 hover:text-flash-blue transition-colors">GierelAxel.dev</a>
+                </p>
             </div>
         </div>
-    </section>
+    </footer>
 
+    <!-- ================= SCRIPTS ================= -->
     <script>
         function mostrarPanel() { document.getElementById('vista-home').style.display = 'none'; document.getElementById('vista-panel').style.display = 'block'; }
         function mostrarHome() { document.getElementById('vista-home').style.display = 'block'; document.getElementById('vista-panel').style.display = 'none'; }
