@@ -7,6 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src='https://8x8.vc/vpaas-magic-cookie-9a9fab89aae34cc595e5165023b9a09c/external_api.js' async></script>
+    <script src="https://sandbox.paguelofacil.com/js/pfwallet.js"></script>
     
     <style>
         :root {
@@ -42,6 +43,7 @@
                 <a href="#inicio" onclick="mostrarHome()" class="hover:text-flash-blue transition-colors">Inicio</a>
                 <a href="#servicios" onclick="mostrarHome()" class="hover:text-flash-blue transition-colors">Servicios</a>
                 <a href="javascript:void(0)" onclick="mostrarPanel()" class="text-flash-blue border-b-2 border-flash-blue pb-1">Panel Tutor</a>
+                <a href="#pagar" onclick="mostrarHome()" class="hover:text-flash-yellow transition-colors">Pagar</a>
                 <a href="#contacto" onclick="mostrarHome()" class="bg-flash-blue text-white px-6 py-2.5 rounded-full btn-hover transition-all">Contacto</a>
             </div>
         </div>
@@ -115,6 +117,27 @@
                             <h3 class="text-xl font-bold mb-2">Y mucho más</h3>
                             <p class="text-slate-500 text-sm leading-relaxed">Ensayos, talleres, cuestionarios y cualquier asignación escolar que necesites.</p>
                         </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Sección Pago -->
+            <section id="pagar" class="py-20 bg-slate-100">
+                <div class="container mx-auto px-6">
+                    <div class="max-w-xl mx-auto bg-white rounded-[2.5rem] shadow-2xl border border-slate-100 p-10">
+                        <h2 class="text-3xl font-black mb-2 uppercase tracking-tighter text-center">Realiza tu <span class="text-flash-blue">Pago</span></h2>
+                        <p class="text-slate-500 text-sm text-center mb-8">Ingresa el monto acordado con tu coordinador y completa el pago de forma segura.</p>
+
+                        <div id="pago-form-inicial" class="space-y-4">
+                            <input type="number" id="montoPago" min="1" step="0.01" class="w-full bg-slate-50 p-4 rounded-2xl outline-none border-2 border-transparent focus:border-flash-blue transition-all" placeholder="Monto a pagar (USD)">
+                            <input type="text" id="descripcionPago" class="w-full bg-slate-50 p-4 rounded-2xl outline-none border-2 border-transparent focus:border-flash-blue transition-all" placeholder="Descripción (ej. Tutoría de Matemáticas)">
+                            <button type="button" onclick="iniciarPago()" class="w-full bg-flash-yellow text-white font-black py-4 rounded-2xl hover:opacity-90 transition-all shadow-xl btn-hover uppercase text-sm">
+                                <i class="fas fa-lock mr-2"></i>Pagar Ahora
+                            </button>
+                        </div>
+
+                        <div id="pago-status" class="text-center text-sm font-bold py-4 hidden"></div>
+                        <div id="container-form" class="hidden"></div>
                     </div>
                 </div>
             </section>
@@ -284,6 +307,66 @@
         });
 
         function cerrarClase() { if(api) api.dispose(); document.getElementById('login-box').classList.remove('hidden'); document.getElementById('jitsi-area').classList.add('hidden'); }
+
+        // --- PAGUELOFACIL ---
+        let pfApiKey = "SlLmEttBcJBgyYjIq4CasgIEsOtrFaZm|DIRp6YiE4dK3c9jp5bVEfzXcF";
+        let pfCclw = "85DD0499E631B0C4E9370C1E527AA439";
+
+        function iniciarPago() {
+            const monto = parseFloat(document.getElementById('montoPago').value);
+            const descripcion = document.getElementById('descripcionPago').value || "Tutoría - Tareas Flash";
+
+            if (!monto || monto <= 0) {
+                alert("Por favor ingresa un monto válido.");
+                return;
+            }
+
+            // Ocultamos el formulario inicial y mostramos el contenedor de pago
+            document.getElementById('pago-form-inicial').classList.add('hidden');
+            document.getElementById('container-form').classList.remove('hidden');
+
+            pfWallet.useAsSandbox(true); // Quitar esta línea al pasar a producción
+
+            pfWallet.openService({ apiKey: pfApiKey, cclw: pfCclw }).then(function (merchantSetup) {
+
+                const paymentInfo = {
+                    amount: monto,
+                    discount: 0.0,
+                    taxAmount: 0.0,
+                    description: descripcion
+                };
+
+                const setup = {
+                    lang: 'es',
+                    embedded: true,
+                    container: 'container-form',
+                    onError: function (data) {
+                        console.error("Error en el pago:", data);
+                        mostrarEstadoPago("❌ Hubo un problema al procesar el pago. Intenta de nuevo.", "text-red-500");
+                    },
+                    onTxSuccess: function (data) {
+                        console.log("Pago exitoso:", data);
+                        document.getElementById('container-form').classList.add('hidden');
+                        mostrarEstadoPago("✅ ¡Pago realizado con éxito! Un coordinador confirmará tu clase.", "text-green-600");
+                    }
+                };
+
+                merchantSetup.startPaymentForm(paymentInfo, setup);
+
+            }, function (error) {
+                console.error("Error al iniciar SDK de PagueloFacil:", error);
+                mostrarEstadoPago("❌ No se pudo cargar la pasarela de pago. Revisa tu conexión o contacta soporte.", "text-red-500");
+                document.getElementById('pago-form-inicial').classList.remove('hidden');
+                document.getElementById('container-form').classList.add('hidden');
+            });
+        }
+
+        function mostrarEstadoPago(mensaje, clase) {
+            const el = document.getElementById('pago-status');
+            el.textContent = mensaje;
+            el.className = `text-center text-sm font-bold py-4 ${clase}`;
+            el.classList.remove('hidden');
+        }
     </script>
 </body>
 </html>
