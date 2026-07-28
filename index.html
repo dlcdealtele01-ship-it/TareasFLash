@@ -7,7 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src='https://8x8.vc/vpaas-magic-cookie-9a9fab89aae34cc595e5165023b9a09c/external_api.js' async></script>
-    <script src="https://sandbox.paguelofacil.com/js/pfwallet.js"></script>
+    <script src="https://secure.paguelofacil.com/HostedFields/vendor/scripts/WALLET/PFScript.js"></script>
     
     <style>
         :root {
@@ -348,10 +348,17 @@
                         console.log("Pago exitoso:", data);
                         document.getElementById('container-form').classList.add('hidden');
                         mostrarEstadoPago("✅ ¡Pago realizado con éxito! Un coordinador confirmará tu clase.", "text-green-600");
+                    },
+                    onTxError: function (data) {
+                        console.error("Error en la transacción:", data);
+                        mostrarEstadoPago("❌ La transacción no pudo completarse.", "text-red-500");
+                    },
+                    onClose: function () {
+                        console.log("Formulario de pago cerrado");
                     }
                 };
 
-                merchantSetup.startPaymentForm(paymentInfo, setup);
+                merchantSetup.init(merchantSetup.dataMerchant, paymentInfo, setup);
 
             }, function (error) {
                 console.error("Error al iniciar SDK de PagueloFacil:", error);
